@@ -7,7 +7,6 @@
 # Python built-in libraries
 from os import path, listdir, rename
 from shutil import move
-import asyncio
 
 # Installed libraries
 import cv2

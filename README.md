@@ -50,6 +50,9 @@
 Im currently working on the search engine [file is **search_engine.py**]<br>
 As there hasn't been a deploy yet, Im not trying to find bugs, Im just coding and testing
 
+When I finish the 3.12 version I'll first give support for older python versions (Probably up to 3.8)<br>
+Im also thinking about adding a PlayLists/Series support, but that will be seen when I deploy the library.
+
 ## :clipboard: Documentation
 Here is an extensive documentation of how VideoService library works and how to use it.
 
