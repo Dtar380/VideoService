@@ -47,7 +47,7 @@
 3. **You're good to go**
 
 ## :memo: Working On
-Im working on the data base manager [file is **uploads_manager.py**]<br>
+Im currently working on the search engine [file is **search_engine.py**]<br>
 As there hasn't been a deploy yet, Im not trying to find bugs, Im just coding and testing
 
 ## :clipboard: Documentation
@@ -57,7 +57,6 @@ Here is an extensive documentation of how VideoService library works and how to 
 - [**VideoService**](#videoservice)
     - ON WORK
 - [**uploads_manager**](#uploads_manager)
-    - ON WORK
 - [**videos**](#videos)
     - [class Video](#class-video)
     - [class Videos](#class-videos)
@@ -71,7 +70,19 @@ ON WORK
 
 ### **uploads_manager**
 ```
-ON WORK
+The class UploadsManager is in charge of managing the uploads that are done 
+to the server. This class every folder DataBase related and has the ability 
+to move folders and rename files.
+
+Every UploadManager object requires this properties:
+- videos (Videos) - Videos type object, contains all info about the videos in the server
+- UPLOADS - Path to the folder containing the Uploads
+- MINIATURES - Path to the folder containing the Miniatures
+- VIDEOS - Path to the folder containing the Videos
+
+UploadManager only has one public method:
+- Upload - Gets the uploaded files, structures them and moves them to the DataBase folders
+    
 ```
 
 ### **videos**
@@ -83,15 +94,17 @@ contains all data assigned to a video on the DataBase, which was given
 when uploading to the DataBase.
 
 This object requires the next properties:
-- **TITLE** (str) - Title assigned to the video on upload
-- **FILENAME** (str) - Name of the file in the videos folder
-- **FILETYPE** (str) - File extension (See <> to see format support)
-- **LENGTH** (int) - Duration of the video in seconds
+- TITLE (str) - Title assigned to the video on upload
+- VIDEO_FILENAME (str) - Name of the file of the video
+- VIDEO_FILETYPE (str) - File extension of the video
+- MINIATURE_FILENAME (str) - Name of the file of the miniature
+- MINIATURE_FILETYPE (str) - File extension of the miniature
+- LENGTH (int) - Duration of the video in seconds
 
 Video objects can also be provided with this properties:
-- **DESCRIPTION** (str) - Description provided on upload
-- **TAGS** (list[str]) - Tags provided on upload
-- **LIKES** (int) - Use if Like system is used
+- DESCRIPTION (str) - Description provided on upload
+- TAGS (list[str]) - Tags provided on upload
+- LIKES (int) - Use if Like system is used
 
 The Video Object also contains a property method called video.
 This property method is used to generate and return a dictionary
@@ -100,19 +113,20 @@ which contains all the properties of the object
 
 - #### **Class Videos**
 ```
-The class Videos is in charge of storing and managing Video Objects. This is done
-by using a list containing Video Objects. This class access every part of the
-DataBase to create the Video Objects and manage it self.
+The class Videos is in charge of storing and managing Video Objects. This is 
+done by using a list containing Video Objects. This class access every part 
+of the DataBase to create the Video Objects and manage it self.
 
 Every video object requires this properties:
-- **DATABASE** (str) - Path to the JSON DataBase file
-- **VIDEOS** (str) - Path to the folder containing the Videos
+- DATABASE (str) - Path to the JSON DataBase file
+- MINIATURES (str) - Path to the folder containing the Miniatures
+- VIDEOS (str) - Path to the folder containing the Videos
 
 Videos class contains the next methods:
-- **load_videos** - Returns a list made of Video Objects accessing the DataBase
-- **save_videos** - Saves the videos list as a dictionary to the DataBase
-- **add_video** - Appends to the videos list and adds an extra object and saves
-- **delete_video** - Deletes an object from the videos list from a given index
+- load_videos - Returns a list made of Video Objects accessing the DataBase
+- save_videos - Saves the videos list as a dictionary to the DataBase
+- add_video - Appends to the videos list and adds an extra object and saves
+- delete_video - Deletes an object from the videos list from a given index
 ```
 
 ### **search_engine**

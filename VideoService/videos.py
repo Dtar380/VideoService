@@ -3,6 +3,8 @@
 ########################################
 
 #####  EXTERNAL IMPORTS
+
+# Python built-in libraries
 import json
 
 ########################################
@@ -22,8 +24,10 @@ class Video:
     ---
     Every video object requires this properties:
     - **TITLE** (str) - Title assigned to the video on upload
-    - **FILENAME** (str) - Name of the file in the videos folder
-    - **FILETYPE** (str) - File extension (See <> to see format support)
+    - **VIDEO_FILENAME** (str) - Name of the file of the video
+    - **VIDEO_FILETYPE** (str) - File extension of the video
+    - **MINIATURE_FILENAME** (str) - Name of the file of the miniature
+    - **MINIATURE_FILETYPE** (str) - File extension of the miniature
     - **LENGTH** (int) - Duration of the video in seconds
     ---
     Video objects can also be provided with this properties:
@@ -40,8 +44,10 @@ class Video:
     # Sets given parameters to object constants
     def __init__(self,
         TITLE: str,
-        FILENAME: str,
-        FILETYPE: str,
+        VIDEO_FILENAME: str,
+        VIDEO_FILETYPE: str,
+        MINIATURE_FILENAME: str,
+        MINIATURE_FILETYPE: str,
         LENGTH: int,
         DESCRIPTION: str = None,
         TAGS: list[str] = None,
@@ -49,12 +55,31 @@ class Video:
         ) -> None:
 
         self.TITLE = TITLE
-        self.FILENAME = FILENAME
-        self.FILETYPE = FILETYPE
+        self.VIDEO_FILENAME = VIDEO_FILENAME
+        self.VIDEO_FILETYPE = VIDEO_FILETYPE
+        self.MINIATURE_FILENAME = MINIATURE_FILENAME
+        self.MINIATURE_FILETYPE = MINIATURE_FILETYPE
         self.LENGTH = LENGTH
         self.DESCRIPTION = DESCRIPTION
         self.TAGS = TAGS
         self.LIKES = LIKES
+
+    # Method to be called when printing object
+    def __str__(self) -> str:
+
+        minutes = int(self.LENGTH / 60)
+        seconds = self.LENGTH - (minutes * 60)
+
+        return f"""Video Object:
+    TITLE: {self.TITLE}
+    VIDEO_FILENAME: {self.VIDEO_FILENAME}
+    VIDEO_FILETYPE: {self.VIDEO_FILETYPE}
+    MINIATURE_FILENAME: {self.MINIATURE_FILENAME}
+    MINIATURE_FILETYPE: {self.MINIATURE_FILETYPE}
+    LENGTH: {minutes}m {seconds}s
+    DESCRIPTION: {self.DESCRIPTION}
+    TAGS: {self.TAGS}
+    LIKES: {self.LIKES}"""
 
     # Property that stores a dict with the key values of the video
     @property
@@ -62,8 +87,10 @@ class Video:
 
         video_json = {
             "TITLE": self.TITLE,
-            "FILENAME": self.FILENAME,
-            "FILETYPE": self.FILETYPE,
+            "VIDEO_FILENAME": self.VIDEO_FILENAME,
+            "VIDEO_FILETYPE": self.VIDEO_FILETYPE,
+            "MINIATURE_FILENAME": self.MINIATURE_FILENAME,
+            "MINIATURE_FILETYPE": self.MINIATURE_FILETYPE,
             "LENGTH": self.LENGTH,
             "DESCRIPTION": self.DESCRIPTION,
             "TAGS": self.TAGS,
@@ -81,6 +108,7 @@ class Videos:
     ---
     Every video object requires this properties:
     - **DATABASE** (str) - Path to the JSON DataBase file
+    - **MINIATURES** (str) - Path to the folder containing the Miniatures
     - **VIDEOS** (str) - Path to the folder containing the Videos
     ---
     Videos class contains the next methods:
@@ -92,8 +120,9 @@ class Videos:
 
     # Constructor of the object
     # Sets given parameters as constants and creates the videos variable 
-    def __init__(self, DATABASE: str, VIDEOS: str) -> None:
+    def __init__(self, DATABASE: str, MINIATURES: str, VIDEOS: str) -> None:
         self.DATABASE = DATABASE
+        self.MINIATURES = MINIATURES
         self.VIDEOS = VIDEOS
         self.videos = self.load_videos()
 
@@ -105,8 +134,10 @@ class Videos:
 
             return [Video(
                 TITLE=video["TITLE"],
-                FILENAME=video["FILENAME"],
-                FILETYPE=video["FILETYPE"],
+                VIDEO_FILENAME=video["VIDEO_FILENAME"],
+                VIDEO_FILETYPE=video["VIDEO_FILETYPE"],
+                MINIATURE_FILENAME=video["MINIATURE_FILENAME"],
+                MINIATURE_FILETYPE=video["MINIATURE_FILETYPE"],
                 LENGTH=video["LENGTH"],
                 DESCRIPTION=video["DESCRIPTION"],
                 TAGS=video["TAGS"],
@@ -126,8 +157,10 @@ class Videos:
     # Method in charge of adding a video to the videos variable
     def add_video(self,
         TITLE: str,
-        FILENAME: str,
-        FILETYPE: str,
+        VIDEO_FILENAME: str,
+        VIDEO_FILETYPE: str,
+        MINIATURE_FILENAME: str,
+        MINIATURE_FILETYPE: str,
         LENGTH: int,
         DESCRIPTION: str = None,
         TAGS: list[str] = None,
@@ -136,8 +169,10 @@ class Videos:
 
         video = Video(
             TITLE=TITLE,
-            FILENAME=FILENAME,
-            FILETYPE=FILETYPE,
+            VIDEO_FILENAME=VIDEO_FILENAME,
+            VIDEO_FILETYPE=VIDEO_FILETYPE,
+            MINIATURE_FILENAME=MINIATURE_FILENAME,
+            MINIATURE_FILETYPE=MINIATURE_FILETYPE,
             LENGTH=LENGTH,
             DESCRIPTION=DESCRIPTION,
             TAGS=TAGS,
@@ -147,24 +182,24 @@ class Videos:
 
         self.save_videos()
 
-    # Method for getting index of a video by using FILENAME attribute
-    def __get_by_name(self, FILENAME: str) -> int:
+    # Private method for getting index of a video by using FILENAME attribute
+    def __get_by_name(self, VIDEO_FILENAME: str) -> int:
         for index, video in enumerate(self.videos):
-            if FILENAME == video.video["FILENAME"]:
+            if VIDEO_FILENAME == video.video["VIDEO_FILENAME"]:
                 return index
 
         raise "ERROR [VIDEOS]: Given FILENAME was not found or doesn't exist"
 
     # Method in charge of deleting a Video from the videos list
-    def delete_video(self, video_id: int = None, FILENAME: str = None):
+    def delete_video(self, VIDEO_ID: int = None, VIDEO_FILENAME: str = None):
         try:
-            if video_id:
-                del self.videos[video_id]
+            if VIDEO_ID:
+                del self.videos[VIDEO_ID]
 
-            elif FILENAME:
-                del self.videos[self.__get_by_name(FILENAME=FILENAME)]
+            elif VIDEO_FILENAME:
+                del self.videos[self.__get_by_name(VIDEO_FILENAME=VIDEO_FILENAME)]
 
-            self.save_videos()
+            self.save_videos() 
 
         except IndexError:
             raise "ERROR [VIDEOS]: video_id not in range of self.videos"
