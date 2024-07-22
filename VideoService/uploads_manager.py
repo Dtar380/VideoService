@@ -7,6 +7,7 @@
 # Python built-in libraries
 from os import path, listdir, rename
 from shutil import move
+from datetime import datetime
 
 # Installed libraries
 import cv2
@@ -20,18 +21,16 @@ from videos import Videos
 
 # Builds an object in charge of the uploads done to the server
 class UploadManager:
-
-    """The class UploadsManager is in charge of managing the uploads that are done to the server.
-    This class every folder DataBase related and has the ability to move folders and rename files.
-    ---
-    Every UploadManager object requires this properties:
-    - **videos** (Videos) - Videos type object, contains all info about the videos in the server
-    - **UPLOADS** - Path to the folder containing the Uploads
-    - **MINIATURES** - Path to the folder containing the Miniatures
-    - **VIDEOS** - Path to the folder containing the Videos
-    ---
-    UploadManager only has one public method:
-    - **Upload** - Gets the uploaded files, structures them and moves them to the DataBase folders
+    
+    """
+    UploadManager
+    ----------
+    The class Upload Manager is in charge of managing the uploads<br>
+    that are done to the server.
+    
+    This class creates an object containing the paths to the Uploads,<br>
+    Miniatures and Videos folder and is used to move files between<br>
+    folders and indexing uploaded files into the DataBase JSON.
     """
 
     # Constructor of the object
@@ -42,6 +41,24 @@ class UploadManager:
         VIDEOS: str,
         videos: Videos,
         ) -> None:
+
+        """
+        ## Constructor function of UploadManager class
+
+        Parameters
+        ----------
+        UPLOADS : str
+            Path to the Uploads folder
+
+        MINIATURES : str
+            Path to the Miniatures folder
+
+        VIDEOS : str
+            Path to the Videos folder
+
+        videos : Videos
+            Contains all info about the DataBase
+        """
 
         self.videos = videos
         self.UPLOADS = UPLOADS
@@ -56,6 +73,32 @@ class UploadManager:
         DESCRIPTION: str = None,
         TAGS: list[str] = None,
         ) -> Videos:
+
+        """
+        ## Method used to upload files to the DataBase
+
+        Parameters
+        ----------
+        TITLE : str
+            Title provided for the video
+
+        VIDEO_FILENAME : str
+            File name of the video
+
+        MINIATURE_FILENAME : str, optional
+            File name of the miniature for the video , by default None
+
+        DESCRIPTION : str, optional
+            Description for the video, by default None
+
+        TAGS : list[str], optional
+            Tags for the video, by default None
+        
+        Returns
+        -------
+        self.videos : Videos
+            Contains all info about the DataBase
+        """
 
         index = len(listdir(self.VIDEOS))
 
@@ -74,6 +117,7 @@ class UploadManager:
             VIDEO_FILETYPE=VIDEO_FILENAME.split(".")[1],
             MINIATURE_FILENAME=MINIATURE_FILENAME,
             MINIATURE_FILETYPE=MINIATURE_FILENAME.split(".")[1],
+            UPLOAD_DATE=datetime.now().strftime("%d/%m/%Y - %H:%M:%S"),
             LENGTH=self.__get_length(file_name=VIDEO_FILENAME),
             DESCRIPTION=DESCRIPTION,
             TAGS=TAGS

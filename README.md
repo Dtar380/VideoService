@@ -73,63 +73,213 @@ ON WORK
 
 ### **uploads_manager**
 ```
-The class UploadsManager is in charge of managing the uploads that are done 
-to the server. This class every folder DataBase related and has the ability 
-to move folders and rename files.
+UploadManager : class
+----------
+The class Upload Manager is in charge of managing the uploads
+that are done to the server.
 
-Every UploadManager object requires this properties:
-- videos (Videos) - Videos type object, contains all info about the videos in the server
-- UPLOADS - Path to the folder containing the Uploads
-- MINIATURES - Path to the folder containing the Miniatures
-- VIDEOS - Path to the folder containing the Videos
+This class creates an object containing the paths to the Uploads,
+Miniatures and Videos folder and is used to move files between
+folders and indexing uploaded files into the DataBase JSON.
 
-UploadManager only has one public method:
-- Upload - Gets the uploaded files, structures them and moves them to the DataBase folders
-    
+Parameters
+----------
+    UPLOADS : str
+    Path to the Uploads folder
+
+    MINIATURES : str
+    Path to the Miniatures folder
+
+    VIDEOS : str
+    Path to the Videos folder
+
+    videos : Videos
+    Contains all info about the DataBase
+----------
+
+Upload : method
+----------
+Method used to upload files to the DataBase
+
+Parameters
+----------
+    TITLE : str
+    Title provided for the video
+
+    VIDEO_FILENAME : str
+    File name of the video
+
+    MINIATURE_FILENAME : str, optional
+    File name of the miniature for the video , by default None
+
+    DESCRIPTION : str, optional
+    Description for the video, by default None
+
+    TAGS : list[str], optional
+    Tags for the video, by default None
+
+Returns
+-------
+    self.videos : Videos
+    Contains all info about the DataBase
 ```
 
 ### **videos**
 
 - #### **Class Video**
 ```
-The class Video is in charge of creating a Video object. A Video object
-contains all data assigned to a video on the DataBase, which was given
-when uploading to the DataBase.
+Video : class
+----------
+The Video object contains all data assigned to a video on the
+DataBase given when uploaded to the server.
 
-This object requires the next properties:
-- TITLE (str) - Title assigned to the video on upload
-- VIDEO_FILENAME (str) - Name of the file of the video
-- VIDEO_FILETYPE (str) - File extension of the video
-- MINIATURE_FILENAME (str) - Name of the file of the miniature
-- MINIATURE_FILETYPE (str) - File extension of the miniature
-- LENGTH (int) - Duration of the video in seconds
+Parameters
+----------
+    TITLE : str
+    Title assigned to the video on upload
 
-Video objects can also be provided with this properties:
-- DESCRIPTION (str) - Description provided on upload
-- TAGS (list[str]) - Tags provided on upload
-- LIKES (int) - Use if Like system is used
+    VIDEO_FILENAME : str
+    Name of the file of the video
 
-The Video Object also contains a property method called video.
-This property method is used to generate and return a dictionary
-which contains all the properties of the object
+    VIDEO_FILETYPE : str
+    File extension of the video
+
+    MINIATURE_FILENAME : str
+    Name of the file of the miniature
+
+    MINIATURE_FILETYPE : str
+    File extension of the miniature
+
+    UPLOAD_DATE : str
+    Date when the video was uploaded
+
+    LENGTH : int
+    Duration of the video in seconds
+
+    DESCRIPTION : str, optional
+    Description provided on upload, by default None
+
+    TAGS : list[str], optional
+    Tags provided on upload, by default None
+
+    LIKES : int, optional
+    Use if Like system is used, by default None
+----------
+
+Video : property
+----------
+Video object to dict
+
+This property takes all values assigned to the object and<br>
+transforms them into a dict
+
+Returns
+-------
+    video_json : dict
+    Contains all info about the Video object
 ```
 
 - #### **Class Videos**
 ```
-The class Videos is in charge of storing and managing Video Objects. This is 
-done by using a list containing Video Objects. This class access every part 
-of the DataBase to create the Video Objects and manage it self.
+Videos
+----------
+The Videos object contains all the videos contained in the DataBase 
+by using Video objects.
 
-Every video object requires this properties:
-- DATABASE (str) - Path to the JSON DataBase file
-- MINIATURES (str) - Path to the folder containing the Miniatures
-- VIDEOS (str) - Path to the folder containing the Videos
+Parameters
+----------
+    DATABASE : str
+    Path to the DataBase JSON file
 
-Videos class contains the next methods:
-- load_videos - Returns a list made of Video Objects accessing the DataBase
-- save_videos - Saves the videos list as a dictionary to the DataBase
-- add_video - Appends to the videos list and adds an extra object and saves
-- delete_video - Deletes an object from the videos list from a given index
+    MINIATURES : str
+    Path to the Miniatures folder
+
+    VIDEOS : str
+    Path to the Videos folder
+----------
+
+Load Videos
+----------
+Method used to load videos from the DataBase
+
+Load_videos access the DataBase JSON file and loads all the data in
+it to Video objects and dumps them into a list.
+
+Returns
+-------
+    videos : list[Video]
+    Contains all info about the DataBase
+----------
+
+Save Videos
+----------
+Method used to save videos to the DataBase
+
+Save_videos transforms the videos list to a dictionary to then save
+it to the DataBase JSON file.
+
+Returns
+-------
+    videos : list[Video]
+    Contains all info about the DataBase
+----------
+
+Add Videos
+----------
+Method used to add videos to the DataBase
+
+Add_video creates a new Video object and appends it to the videos
+list. It then uses save_video function to save the new video added
+to the DataBase.
+
+Parameters
+----------
+    TITLE : str
+    Title assigned to the video on upload
+
+    VIDEO_FILENAME : str
+    Name of the file of the video
+
+    VIDEO_FILETYPE : str
+    File extension of the video
+
+    MINIATURE_FILENAME : str
+    Name of the file of the miniature
+
+    MINIATURE_FILETYPE : str
+    File extension of the miniature
+
+    UPLOAD_DATE : str
+    Date when the video was uploaded
+
+    LENGTH : int
+    Duration of the video in seconds
+
+    DESCRIPTION : str, optional
+    Description provided on upload, by default None
+
+    TAGS : list[str], optional
+    Tags provided on upload, by default None
+
+    LIKES : int, optional
+    Use if Like system is used, by default None
+----------
+
+Delete Video
+----------
+Method used to delete videos from the DataBase
+
+Delete_video deletes a video from the videos list given specific parameters.
+
+Parameters
+----------
+    VIDEO_ID : int, optional
+    Index that leads to the video on the videos list, by default None
+
+    VIDEO_FILENAME : str, optional
+    Filename of the video, by default None
+
+Requires only one of both parameter
 ```
 
 ### **search_engine**
