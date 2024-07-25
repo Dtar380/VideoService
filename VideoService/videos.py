@@ -4,7 +4,7 @@
 
 #####  EXTERNAL IMPORTS
 
-# Python built-in libraries
+# PYTHON BUILT-IN
 import json
 
 ########################################
@@ -18,7 +18,7 @@ class Video:
 
     """
     Video
-    ----------
+    -----
     The Video object contains all data assigned to a video on the<br>
     DataBase given when uploaded to the server.
     """
@@ -139,7 +139,7 @@ class Videos:
 
     """
     Videos
-    ----------
+    ------
     The Videos object contains all the videos contained in the DataBase<br>
     by using Video objects.
     """

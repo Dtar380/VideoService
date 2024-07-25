@@ -4,12 +4,12 @@
 
 #####  EXTERNAL IMPORTS
 
-# Python built-in libraries
+# PYTHON BUILT-IN
 from os import path, listdir, rename
 from shutil import move
 from datetime import datetime
 
-# Installed libraries
+# LIBRARIES
 import cv2
 
 #####  INTERNAL IMPORTS
@@ -24,7 +24,7 @@ class UploadManager:
     
     """
     UploadManager
-    ----------
+    -------------
     The class Upload Manager is in charge of managing the uploads<br>
     that are done to the server.
     
@@ -39,7 +39,6 @@ class UploadManager:
         UPLOADS: str,
         MINIATURES: str,
         VIDEOS: str,
-        videos: Videos,
         ) -> None:
 
         """
@@ -55,18 +54,15 @@ class UploadManager:
 
         VIDEOS : str
             Path to the Videos folder
-
-        videos : Videos
-            Contains all info about the DataBase
         """
 
-        self.videos = videos
         self.UPLOADS = UPLOADS
         self.MINIATURES = MINIATURES
         self.VIDEOS = VIDEOS
 
     # Method in charge of uploading the files that have been uploaded
     def upload(self,
+        videos: Videos,
         TITLE: str,
         VIDEO_FILENAME: str,
         MINIATURE_FILENAME: str = None,
@@ -111,7 +107,7 @@ class UploadManager:
 
         self.__upload_to_database(file_name=VIDEO_FILENAME)
 
-        self.videos.add_video(
+        videos.add_video(
             TITLE=TITLE,
             VIDEO_FILENAME=VIDEO_FILENAME,
             VIDEO_FILETYPE=VIDEO_FILENAME.split(".")[1],
@@ -123,7 +119,7 @@ class UploadManager:
             TAGS=TAGS
         )
 
-        return self.videos
+        return videos
 
     # Private method for creating a miniature if none was given using first frame of the video
     def __create_miniature(self, file_name: str, index: int) -> str:
