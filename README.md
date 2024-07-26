@@ -9,7 +9,7 @@
 
 ## **The library you needed to create your own Video Service**
 **VideoService** is a python library focused on the BackEnd for Video Services, such as YouTube (Note that this library is not used in YouTube, it is just an example). <br>
-**VideoService** uses a JSON DataBase to manage all the Videos on the server and its not dependant on external libraries to work, all functionalities depend on bare Python libraries.
+**VideoService** uses a JSON DataBase to manage all the Videos on the server and its not dependant on external libraries to work (except for OpenCV and Lingua), all functionalities depend on bare Python libraries.
 
 ## :bookmark_tabs: **Table of Content**
 - [**Main features**](#blue_heart-main-features)
@@ -31,7 +31,7 @@
         - Length
         - Tags
         - Order
-    - Reputation system
+    - "Reputation system"
 
 ## :arrow_down: Install package
 
@@ -47,7 +47,7 @@
 3. **You're good to go**
 
 ## :memo: Working On
-Im currently working on the VideoService library [file is **__main__.py**]<br>
+Currently working on the reputation system<br>
 As there hasn't been a deploy yet, Im not trying to find bugs, Im just coding and testing
 
 When I finish the 3.12 version I'll first give support for older python versions (Probably up to 3.8)<br>
@@ -59,7 +59,6 @@ Here is an extensive documentation of how VideoService library works and how to 
 
 ### :bookmark_tabs: **INDEX**
 - [**VideoService**](#videoservice)
-    - ON WORK
 - [**uploads_manager**](#uploads_manager)
 - [**videos**](#videos)
     - [class Video](#class-video)
@@ -72,24 +71,16 @@ Here is an extensive documentation of how VideoService library works and how to 
 
 ### **VideoService**
 ```
-ON WORK
-```
-
-### **uploads_manager**
-```
-UploadManager : class
-----------
-The class Upload Manager is in charge of managing the uploads
-that are done to the server.
-
-This class creates an object containing the paths to the Uploads,
-Miniatures and Videos folder and is used to move files between
-folders and indexing uploaded files into the DataBase JSON.
+VideoService : class
+--------------------
+Main class of Video Service library (and the only class you'll need 😉)
+This class will manage all the backend of the service, and you will just
+need to call it's methods when required by the server.
 
 Parameters
 ----------
-    UPLOADS : str
-    Path to the Uploads folder
+    DATABASE : str
+    Path to the DataBase JSON file
 
     MINIATURES : str
     Path to the Miniatures folder
@@ -97,12 +88,26 @@ Parameters
     VIDEOS : str
     Path to the Videos folder
 
-    videos : Videos
-    Contains all info about the DataBase
-----------
+    UPLOADS : str
+    Path to the Uploads folder
+
+    LANGUAGES : str
+    Path to the languages DataBase folder
+
+Raise
+-----
+    ValueError 
+    If variable was not the expected type
+
+    DataBaseNotFound
+    If DataBase JSON was not found
+
+    FolderNotFound
+    If folder was not found
+-----
 
 Upload : method
-----------
+---------------
 Method used to upload files to the DataBase
 
 Parameters
@@ -122,9 +127,126 @@ Parameters
     TAGS : list[str], optional
     Tags for the video, by default None
 
+Raise
+-----
+    ValueError
+    If variable was not the expected type
+
+    FolderNotFound
+    If folder was not found
+-----
+
+Save Videos : method
+--------------------
+Save_videos transforms the `videos` list to a dictionary to then save it
+to the DataBase JSON file.
+Automatically performed by the server when a new Video is uploaded.
+--------------------
+
+Delete Video : method
+---------------------
+Method used to delete videos from the DataBase
+
+
+Parameters
+----------
+    VIDEO_ID : int, optional
+    Index that leads to the video on the `videos` list, by default None
+
+    VIDEO_FILENAME : str, optional
+    Filename of the video, by default None
+
+**Requires only one of both parameter**
+
+Raise
+-----
+    ValueError
+    If variable was not the expected type
+-----
+
+Query : method
+--------------
+Method used to perform a query
+
+Parameters
+----------
+    query : str
+    Contains the searched value
+
+    order_settings : list[str | bool]
+    Contains what to order with and direction
+
+    filter_settings : dict[str, dict[str, List[str | int] | bool]]
+    Contains what to filter with
+
+    tags : list[str], optional
+    Tags assigned when upload, by default None
+
 Returns
 -------
-    self.videos : Videos
+    Search : Search
+    Contains all info about the query
+
+Raise
+-----
+    ValueError
+    WrongOrderStructure
+    WrongFilterStructure
+    WrongTagsStructure
+    If variable was not the expected type
+-------
+```
+
+### **uploads_manager**
+```
+UploadManager : class
+---------------------
+The class Upload Manager is in charge of managing the uploads
+that are done to the server.
+
+This class creates an object containing the paths to the Uploads,
+Miniatures and Videos folder and is used to move files between
+folders and indexing uploaded files into the DataBase JSON.
+
+Parameters
+----------
+    UPLOADS : str
+    Path to the Uploads folder
+
+    MINIATURES : str
+    Path to the Miniatures folder
+
+    VIDEOS : str
+    Path to the Videos folder
+----------
+
+Upload : method
+---------------
+Method used to upload files to the DataBase
+
+Parameters
+----------
+    videos : Videos
+    Information about the Videos DataBase
+
+    TITLE : str
+    Title provided for the video
+
+    VIDEO_FILENAME : str
+    File name of the video
+
+    MINIATURE_FILENAME : str, optional
+    File name of the miniature for the video , by default None
+
+    DESCRIPTION : str, optional
+    Description for the video, by default None
+
+    TAGS : list[str], optional
+    Tags for the video, by default None
+
+Returns
+-------
+    videos : Videos
     Contains all info about the DataBase
 ```
 
@@ -133,7 +255,7 @@ Returns
 - #### **Class Video**
 ```
 Video : class
-----------
+-------------
 The Video object contains all data assigned to a video on the
 DataBase given when uploaded to the server.
 
@@ -171,7 +293,7 @@ Parameters
 ----------
 
 Video : property
-----------
+----------------
 Video object to dict
 
 This property takes all values assigned to the object and<br>
@@ -185,8 +307,8 @@ Returns
 
 - #### **Class Videos**
 ```
-Videos
-----------
+Videos : class
+--------------
 The Videos object contains all the videos contained in the DataBase 
 by using Video objects.
 
@@ -202,8 +324,8 @@ Parameters
     Path to the Videos folder
 ----------
 
-Load Videos
-----------
+Load Videos : method
+---------------------
 Method used to load videos from the DataBase
 
 Load_videos access the DataBase JSON file and loads all the data in
@@ -213,10 +335,10 @@ Returns
 -------
     videos : list[Video]
     Contains all info about the DataBase
-----------
+-------
 
-Save Videos
-----------
+Save Videos : method
+--------------------
 Method used to save videos to the DataBase
 
 Save_videos transforms the videos list to a dictionary to then save
@@ -226,10 +348,10 @@ Returns
 -------
     videos : list[Video]
     Contains all info about the DataBase
-----------
+-------
 
-Add Videos
-----------
+Add Videos : method
+-------------------
 Method used to add videos to the DataBase
 
 Add_video creates a new Video object and appends it to the videos
@@ -269,8 +391,8 @@ Parameters
     Use if Like system is used, by default None
 ----------
 
-Delete Video
-----------
+Delete Video : method
+---------------------
 Method used to delete videos from the DataBase
 
 Delete_video deletes a video from the videos list given specific parameters.
@@ -283,17 +405,19 @@ Parameters
     VIDEO_FILENAME : str, optional
     Filename of the video, by default None
 
-Requires only one of both parameter
+-> Requires only one of both parameter
+----------
 ```
 
 ### **SearchEngine**
 ```
 SEARCH ENGINE
 -------------
-Use the custom search engine designed by Dtar380 for the VideoService library.
+Use the custom search engine designed by Dtar380 for the VideoService library
 Multilingual search engine based on percentage of coincidence of a query, with
-the ability to filter and order results as user desires. Giving the ability to 
-the user to change query parameters as fast as possible thanks to the `Search`class objects implementation.
+the ability to filter and order results as user desires. Giving the ability to
+the user to change query parameters as fast as possible thanks to the Search
+class objects implementation.
 ```
 
 #### **search_engine.py**
@@ -306,8 +430,8 @@ place.
 
 - #### **Class QueryWords**
 ```
-QueryWords
-----------
+QueryWords : class
+------------------
 The QueryWords class contains the weights for each type of word.
 A QueryWords object contains the words of the query divided in
 each category as well as the max weight it can have.
@@ -319,11 +443,14 @@ Parameters
 
     language_dict : dict
     Contains a dictionary of the language of the query
+----------
 ```
 
 - #### **Functions**
 ```
-Search: Function used to perform a search
+Search : method
+---------------
+Function used to perform a search
 
 Parameters
 ----------
@@ -342,15 +469,17 @@ Returns
     Contains all info about the DataBase
 -------
 
-Order: Function used to order the videos
+Order : method
+--------------
+Function used to order the videos
 
 Parameters
 ----------
-    order_settings : list
-    Contains what to order with and direction
-
     videos : list[Video]
     Contains all info about the DataBase
+
+    order_settings : list[str | bool]
+    Contains what to order with and direction
 
     title : str, optional
     Query, by default None
@@ -364,15 +493,17 @@ Returns
     Contains all info about the DataBase
 -------
 
-Filter: Function used to filter the videos
+Filter : method
+---------------
+Function used to filter the videos
 
 Parameters
 ----------
-    filter_settings : dict
-    Contains what to filter with
-
     videos : list[Video]
     Contains all info about the DataBase
+
+    filter_settings : dict[str, dict[str, List[str | int] | bool]]
+    Contains what to filter with
 
 Returns
 -------
@@ -383,8 +514,8 @@ Returns
 
 #### **Class Search**
 ```
-Search
-------
+Search : class
+--------------
 A Search object is created when ever a search is performed 
 by a user, and it contains all info about the query.
 
@@ -399,40 +530,104 @@ Parameters
     languages_path : str
     Path to the languages DataBase
 
-    order_settings : list
+    order_settings : list[str | bool]
     Contains what to order with and direction
+    Default, by Title coincidence descendant
 
-    filter_settings : dict
+    filter_settings : dict[str, dict[str, List[str | int] | bool]]
     Contains what to filter with
+    Default, deactivated every filter
 
     tags : list[str], optional
     Tags assigned when upload, by default None
 ----------
-----------
-Query server function
 
+Query Server : method
+---------------------
 Use when want to perform a query to the server.
 Sets the class variable `result` to the result of
 the query.
 ----------
-----------
-Tags change Search function
 
+Tags Change : method
+--------------------
 Use when user changed the tags of the query.
 Automatically changes the result of the query.
-----------
-----------
-Order settings change Search function
 
+Parameters
+----------
+    tags : list[str]
+    Tags searched for the video
+
+Raise
+-----
+    WrongTagsStructure
+    If variable was not the expected type
+-----
+
+Order Settings Change : method
+------------------------------
 Use when user changed order settings. Automatically
 changes the result of the query.
-----------
-----------
-Filter settings change Search function
 
+Parameters
+----------
+    order_settings : list[str | bool]
+    List containing the parameter to use and way to order
+    If Second Value True descendant order if False ascendant
+
+Raise
+-----
+    WrongOrderStructure
+    If variable was not the expected type
+-----
+
+Filter Settings Change : method
+-------------------------------
 Use when user changed filter settings. Automatically 
 changes the result of the query.
+
+Parameters
 ----------
+    filter_settings : dict[str, dict[str, List[str | int] | bool]]
+    Dict containing the parameters to use
+
+Raise
+-----
+    WrongFilterStructure
+    If variable was not the expected type
+-----
+```
+```python
+order_setting structure:
+[
+    str,
+    True | False
+]
+
+order types:
+"_order_by_title_coincidence"
+"_order_by_date"
+"_order_by_length"
+"_order_by_tags_coincidence"
+"_order_by_popularity"
+
+-------------------------
+filter_setting structure:
+{
+"_filter_by_date": {
+    "filter": List[str],
+    "active": True | False
+    },
+"_filter_by_length": {
+    "filter": List[int],
+    "active": True | False
+    },
+"_filter_by_tags": {
+    "filter": List[str],
+    "active": True | False
+    }
+}
 ```
 
 ## :open_file_folder: Known Issues

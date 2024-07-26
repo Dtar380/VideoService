@@ -5,6 +5,7 @@
 #####  EXTERNAL IMPORTS
 
 # PYTHON BUILT-IN
+from typing import List
 import json
 
 ########################################
@@ -33,9 +34,9 @@ class Video:
         MINIATURE_FILETYPE: str,
         UPLOAD_DATE: str,
         LENGTH: int,
-        DESCRIPTION: str = None,
-        TAGS: list[str] = None,
-        LIKES: int = None
+        DESCRIPTION: str = "",
+        TAGS: List[str] = [""],
+        LIKES: int = 0
         ) -> None:
 
         """
@@ -170,10 +171,17 @@ class Videos:
         self.DATABASE = DATABASE
         self.MINIATURES = MINIATURES
         self.VIDEOS = VIDEOS
-        self.videos = self.load_videos()
+
+        with open(DATABASE, "r+") as f:
+            DataBase_length = len(f.read())
+
+        if len(DataBase_length) <= 6:
+            self.videos = self.load_videos()
+        else:
+            self.videos: List[Video] = []
 
     # Method in charge of loading the database as Video objects in a list
-    def load_videos(self) -> list[Video]:
+    def load_videos(self) -> List[Video]:
 
         """
         ## Method used to load videos from the DataBase
@@ -215,11 +223,7 @@ class Videos:
 
         Save_videos transforms the `videos` list to a dictionary to then save it<br>
         to the DataBase JSON file.
-        
-        Returns
-        -------
-        videos : list[Video]
-            Contains all info about the DataBase
+        Automatically performed by the server when a new Video is uploaded.
         """
 
         data = [video.video for video in self.videos]
@@ -237,7 +241,7 @@ class Videos:
         UPLOAD_DATE: str,
         LENGTH: int,
         DESCRIPTION: str = None,
-        TAGS: list[str] = None,
+        TAGS: List[str] = None,
         LIKES: int = None
         ) -> None:
 
@@ -291,15 +295,15 @@ class Videos:
             LENGTH=LENGTH,
             DESCRIPTION=DESCRIPTION,
             TAGS=TAGS,
-            LIKES=LIKES)
+            LIKES=LIKES
+        )
 
         self.videos.append(video)
 
         self.save_videos()
 
     # Private method for getting index of a video by using FILENAME attribute
-    def __get_by_name(self,
-        VIDEO_FILENAME: str) -> int:
+    def __get_by_name(self, VIDEO_FILENAME: str) -> int:
 
         for index, video in enumerate(self.videos):
             if VIDEO_FILENAME == video.video["VIDEO_FILENAME"]:

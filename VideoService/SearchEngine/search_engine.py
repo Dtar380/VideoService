@@ -16,7 +16,7 @@ place.
 #####  EXTERNAL IMPORTS
 
 # PYTHON BUILT-IN
-from typing import Callable
+from typing import List
 from os import path
 import json
 
@@ -43,7 +43,10 @@ class QueryWords:
 
     weights = [4, 4, 4, 4, 3, 3, 2, 2, 1, 1]
 
-    def __init__(self, query: str, language_dict: dict) -> None:
+    def __init__(self,
+        query: str,
+        language_dict: dict
+        ) -> None:
 
         """
         ## Constructor function of QueryWords class
@@ -104,7 +107,7 @@ class QueryWords:
         )
 
 #####  FUNCTIONS
-def search(videos: list[Video], query: str, languages_path: str) -> list[Video]:
+def search(videos: List[Video], query: str, LANGUAGES: str) -> List[Video]:
 
     """
     ## Search
@@ -119,7 +122,7 @@ def search(videos: list[Video], query: str, languages_path: str) -> list[Video]:
     query : str
         Contains the searched value
 
-    languages_path : str
+    LANGUAGES : str
         Path to the languages DataBase
 
     Returns
@@ -130,7 +133,7 @@ def search(videos: list[Video], query: str, languages_path: str) -> list[Video]:
 
     language = LanguageDetectorBuilder.from_all_languages().build().detect_language_of(query)
     language_file = f"{language.iso_code_639_1.name.lower()}.json"
-    language_dict = path.join(languages_path, language_file)
+    language_dict = path.join(LANGUAGES, language_file)
 
     with open(language_dict, "r+", encoding="utf-8") as f:
         data = json.load(f.read())
@@ -140,7 +143,7 @@ def search(videos: list[Video], query: str, languages_path: str) -> list[Video]:
 
     return videos
 
-def _filter_by_query(videos: list[Video], query_words: QueryWords) -> list[Video]:
+def _filter_by_query(videos: List[Video], query_words: QueryWords) -> List[Video]:
     threshold = query_words.max_score * 0.25
 
     word_weights = [{word: QueryWords.weights[i] for word in words}
@@ -152,7 +155,11 @@ def _filter_by_query(videos: list[Video], query_words: QueryWords) -> list[Video
         if word in video.TITLE
         ) >= threshold]
 
-def order(order_settings: list, videos: list[Video], title: str = None, tags: list[str] = None) -> list[Video]:
+def order(videos: List[Video], 
+    order_settings: list,
+    title: str = None,
+    tags: list[str] = None
+    ) -> List[Video]:
     
     """
     ## Order
@@ -161,11 +168,11 @@ def order(order_settings: list, videos: list[Video], title: str = None, tags: li
 
     Parameters
     ----------
-    order_settings : list
-        Contains what to order with and direction
-
     videos : list[Video]
         Contains all info about the DataBase
+
+    order_settings : list
+        Contains what to order with and direction
 
     title : str, optional
         Query, by default None
@@ -190,22 +197,22 @@ def order(order_settings: list, videos: list[Video], title: str = None, tags: li
     elif order_settings[0] == "LIKES":
         return _order_by_popularity(videos, order_settings[1])
 
-def _order_by_title_coincidence(videos: list[Video], title: str, order: bool = True) -> list[Video]: 
+def _order_by_title_coincidence(videos: List[Video], title: str, order: bool = True) -> List[Video]: 
     return sorted(videos, key=lambda video: sum(1 for word in title.split(" ") if word in video.TITLE), reverse=order)
 
-def _order_by_date(videos: list[Video], order: bool = True) -> list[Video]:
+def _order_by_date(videos: List[Video], order: bool = True) -> List[Video]:
     return videos.sort(key=lambda x: x.UPLOAD_DATE, reverse=order)
 
-def _order_by_length(videos: list[Video], order: bool = True) -> list[Video]:
+def _order_by_length(videos: List[Video], order: bool = True) -> List[Video]:
     return videos.sort(key=lambda x: x.LENGTH, reverse=order)
 
-def _order_by_tags_coincidence(videos: list[Video], tags: list[str], order: bool = True) -> list[Video]:
+def _order_by_tags_coincidence(videos: List[Video], tags: List[str], order: bool = True) -> List[Video]:
     return sorted(videos, key=lambda video: sum(1 for tag in tags if tag in video.TAGS), reverse=order)
 
-def _order_by_popularity(videos: list[Video], order: bool = True) -> list[Video]:
+def _order_by_popularity(videos: List[Video], order: bool = True) -> List[Video]:
     return videos.sort(key=lambda x: x.LIKES, reverse=order)
 
-def filter(filter_settings: dict, videos: list[Video]) -> list[Video]:
+def filter(videos: List[Video], filter_settings: dict) -> List[Video]:
     
     """
     ## Filter
@@ -214,11 +221,11 @@ def filter(filter_settings: dict, videos: list[Video]) -> list[Video]:
 
     Parameters
     ----------
-    filter_settings : dict
-        Contains what to filter with
-
     videos : list[Video]
         Contains all info about the DataBase
+
+    filter_settings : dict
+        Contains what to filter with
 
     Returns
     -------
@@ -239,7 +246,7 @@ def filter(filter_settings: dict, videos: list[Video]) -> list[Video]:
     
     return videos
 
-def _filter_by_date(videos: list[Video], filter: list[str]) -> list[Video]:
+def _filter_by_date(videos: List[Video], filter: List[str]) -> List[Video]:
     if len(filter) != 2:
         raise "ERROR [SEARCH_ENGINE]: Filter list does not contain the requested amount of items"
     
@@ -251,7 +258,7 @@ def _filter_by_date(videos: list[Video], filter: list[str]) -> list[Video]:
         return [video for video in videos if filter[0] < video.UPLOAD_DATE < filter[1]]
 
 
-def _filter_by_length(videos: list[Video], filter: list[int]) -> None:
+def _filter_by_length(videos: List[Video], filter: List[int]) -> None:
     if len(filter) != 2:
         raise "ERROR [SEARCH_ENGINE]: Filter list does not contain the requested amount of items"
     
@@ -260,5 +267,5 @@ def _filter_by_length(videos: list[Video], filter: list[int]) -> None:
     else:
         return [video for video in videos if filter[0] < video.UPLOAD_DATE < filter[1]]
 
-def _filter_by_tags(videos: list[Video], filter: list[str]) -> None:
+def _filter_by_tags(videos: List[Video], filter: List[str]) -> None:
         return [video for video in videos if filter in video.TAGS]
