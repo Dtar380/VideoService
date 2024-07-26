@@ -26,7 +26,7 @@
 - **Managing Video Files**
 - **Managing Data Bases**
 - **Search Engine**
-    - KeyWord search
+    - Title Search
     - MultiFilter search
         - Length
         - Tags
@@ -47,11 +47,12 @@
 3. **You're good to go**
 
 ## :memo: Working On
-Im currently working on the search engine [file is **search_engine.py**]<br>
+Im currently working on the VideoService library [file is **__main__.py**]<br>
 As there hasn't been a deploy yet, Im not trying to find bugs, Im just coding and testing
 
 When I finish the 3.12 version I'll first give support for older python versions (Probably up to 3.8)<br>
-Im also thinking about adding a PlayLists/Series support, but that will be seen when I deploy the library.
+Im also thinking about adding a PlayLists/Series support, but that will be seen when I deploy the library.<br>
+A Languages API will also be released to make it easier to have language support, instead of having the dictionaries in your own server
 
 ## :clipboard: Documentation
 Here is an extensive documentation of how VideoService library works and how to use it.
@@ -63,8 +64,11 @@ Here is an extensive documentation of how VideoService library works and how to 
 - [**videos**](#videos)
     - [class Video](#class-video)
     - [class Videos](#class-videos)
-- [**search_engine**](#search_engine)
-    - ON WORK
+- [**SearchEngine**](#SearchEngine)
+    - [search_engine.py](#search_enginepy)
+        - [class QueryWords](#class-querywords)
+        - [Functions](#functions)
+    - [class Search](#class-search)
 
 ### **VideoService**
 ```
@@ -282,9 +286,153 @@ Parameters
 Requires only one of both parameter
 ```
 
-### **search_engine**
+### **SearchEngine**
 ```
-ON WORK
+SEARCH ENGINE
+-------------
+Use the custom search engine designed by Dtar380 for the VideoService library.
+Multilingual search engine based on percentage of coincidence of a query, with
+the ability to filter and order results as user desires. Giving the ability to 
+the user to change query parameters as fast as possible thanks to the `Search`class objects implementation.
+```
+
+#### **search_engine.py**
+```
+search_engine.py
+----------------
+Containing all functions of the search engine, this is where your search takes
+place.
+```
+
+- #### **Class QueryWords**
+```
+QueryWords
+----------
+The QueryWords class contains the weights for each type of word.
+A QueryWords object contains the words of the query divided in
+each category as well as the max weight it can have.
+
+Parameters
+----------
+    query : str
+    Contains the searched value
+
+    language_dict : dict
+    Contains a dictionary of the language of the query
+```
+
+- #### **Functions**
+```
+Search: Function used to perform a search
+
+Parameters
+----------
+    videos : list[Video]
+    Contains all info about the DataBase
+
+    query : str
+    Contains the searched value
+
+    languages_path : str
+    Path to the languages DataBase
+
+Returns
+-------
+    videos : list[Video]
+    Contains all info about the DataBase
+-------
+
+Order: Function used to order the videos
+
+Parameters
+----------
+    order_settings : list
+    Contains what to order with and direction
+
+    videos : list[Video]
+    Contains all info about the DataBase
+
+    title : str, optional
+    Query, by default None
+
+    tags : list[str], optional
+    Tags assigned when upload, by default None
+
+Returns
+-------
+    videos : list[Video]
+    Contains all info about the DataBase
+-------
+
+Filter: Function used to filter the videos
+
+Parameters
+----------
+    filter_settings : dict
+    Contains what to filter with
+
+    videos : list[Video]
+    Contains all info about the DataBase
+
+Returns
+-------
+    videos : list[Video]
+    Contains all info about the DataBase
+-------
+```
+
+#### **Class Search**
+```
+Search
+------
+A Search object is created when ever a search is performed 
+by a user, and it contains all info about the query.
+
+Parameters
+----------
+    query : str
+    Contains the searched value
+
+    videos : list[Video]
+    Contains all info about the DataBase
+
+    languages_path : str
+    Path to the languages DataBase
+
+    order_settings : list
+    Contains what to order with and direction
+
+    filter_settings : dict
+    Contains what to filter with
+
+    tags : list[str], optional
+    Tags assigned when upload, by default None
+----------
+----------
+Query server function
+
+Use when want to perform a query to the server.
+Sets the class variable `result` to the result of
+the query.
+----------
+----------
+Tags change Search function
+
+Use when user changed the tags of the query.
+Automatically changes the result of the query.
+----------
+----------
+Order settings change Search function
+
+Use when user changed order settings. Automatically
+changes the result of the query.
+----------
+----------
+Filter settings change Search function
+
+Use when user changed filter settings. Automatically 
+changes the result of the query.
+----------
 ```
 
 ## :open_file_folder: Known Issues

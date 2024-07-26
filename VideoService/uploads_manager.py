@@ -25,11 +25,11 @@ class UploadManager:
     """
     UploadManager
     -------------
-    The class Upload Manager is in charge of managing the uploads<br>
+    The class Upload Manager is in charge of managing the uploads <br>
     that are done to the server.
     
-    This class creates an object containing the paths to the Uploads,<br>
-    Miniatures and Videos folder and is used to move files between<br>
+    This class creates an object containing the paths to the Uploads, <br>
+    Miniatures and Videos folder and is used to move files between <br>
     folders and indexing uploaded files into the DataBase JSON.
     """
 
