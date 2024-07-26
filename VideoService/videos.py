@@ -1,4 +1,15 @@
 ########################################
+#####  DOCUMENTATION               #####
+########################################
+
+"""
+Videos
+------
+This file contains the class Video and Videos, which are<br>
+in charge of managing the Videos DataBase.
+"""
+
+########################################
 #####  IMPORTING MODULES           #####
 ########################################
 

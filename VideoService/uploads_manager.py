@@ -1,4 +1,15 @@
 ########################################
+#####  DOCUMENTATION               #####
+########################################
+
+"""
+Uploads Manager
+---------------
+This file contains the class UploadManager, in which we can<br>
+find all methods related with file uploads to the server.
+"""
+
+########################################
 #####  IMPORTING MODULES           #####
 ########################################
 

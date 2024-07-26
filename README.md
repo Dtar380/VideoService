@@ -68,8 +68,23 @@ Here is an extensive documentation of how VideoService library works and how to 
         - [class QueryWords](#class-querywords)
         - [Functions](#functions)
     - [class Search](#class-search)
+    - [query settings](#query-settings)
 
 ### **VideoService**
+
+```
+VIDEO SERVICE
+-------------
+The library you didn't know you needed 🗿
+
+----
+
+This library gives you all you need to create a video service, Video management,
+DataBase management, and an integrated Search Engine.
+```
+
+<details>
+
 ```
 VideoService : class
 --------------------
@@ -196,8 +211,19 @@ Raise
     If variable was not the expected type
 -------
 ```
+</details>
 
 ### **uploads_manager**
+
+```
+Uploads Manager
+---------------
+This file contains the class UploadManager, in which we can find all methods
+related with file uploads to the server.
+```
+
+<details>
+
 ```
 UploadManager : class
 ---------------------
@@ -250,9 +276,23 @@ Returns
     Contains all info about the DataBase
 ```
 
+</details>
+
+
+
 ### **videos**
 
+```
+Videos
+------
+This file contains the class Video and Videos, which are in charge of managing
+the Videos DataBase.
+```
+
 - #### **Class Video**
+
+<details>
+
 ```
 Video : class
 -------------
@@ -305,7 +345,12 @@ Returns
     Contains all info about the Video object
 ```
 
+</details>
+
 - #### **Class Videos**
+
+<details>
+
 ```
 Videos : class
 --------------
@@ -409,6 +454,8 @@ Parameters
 ----------
 ```
 
+</details>
+
 ### **SearchEngine**
 ```
 SEARCH ENGINE
@@ -421,6 +468,9 @@ class objects implementation.
 ```
 
 #### **search_engine.py**
+
+<details>
+
 ```
 search_engine.py
 ----------------
@@ -428,7 +478,12 @@ Containing all functions of the search engine, this is where your search takes
 place.
 ```
 
+</details>
+
 - #### **Class QueryWords**
+
+<details>
+
 ```
 QueryWords : class
 ------------------
@@ -446,7 +501,12 @@ Parameters
 ----------
 ```
 
+</details>
+
 - #### **Functions**
+
+<details>
+
 ```
 Search : method
 ---------------
@@ -512,7 +572,12 @@ Returns
 -------
 ```
 
+</details>
+
 #### **Class Search**
+
+<details>
+
 ```
 Search : class
 --------------
@@ -598,6 +663,13 @@ Raise
     If variable was not the expected type
 -----
 ```
+
+</details>
+
+#### **Query Settings**
+
+<details>
+
 ```python
 order_setting structure:
 [
@@ -629,6 +701,8 @@ filter_setting structure:
     }
 }
 ```
+
+</details>
 
 ## :open_file_folder: Known Issues
 As there hasn't been a deploy yet, Im not trying to find bugs, Im just coding and testing
