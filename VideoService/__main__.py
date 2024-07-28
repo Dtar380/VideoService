@@ -218,15 +218,18 @@ class VideoService:
         Raise
         -----
         ValueError
-            If variable was not the expected type
+            If variable was not the expected type<br>
+            If no arguments are provided
         """
 
         # Check parameters type
         if VIDEO_ID and not isinstance(VIDEO_ID, int):
-            raise ValueError("ERROR [VideoService]: VIDEO_ID was expected to be a str")
+            raise ValueError("ERROR [VideoService]: VIDEO_ID was expected to be a int")
         if VIDEO_FILENAME and not isinstance(VIDEO_FILENAME, str):
-            raise ValueError("ERROR [VideoService]: VIDEO_ID was expected to be a str")
-        
+            raise ValueError("ERROR [VideoService]: VIDEO_FILENAME was expected to be a str")
+        if not VIDEO_ID and not VIDEO_FILENAME:
+            raise ValueError("ERROR [VideoService]: No arguments where provided")
+
         self.videos.delete_video(
             VIDEO_ID=VIDEO_ID,
             VIDEO_FILENAME=VIDEO_FILENAME
@@ -288,3 +291,51 @@ class VideoService:
             filter_settings = filter_settings,
             tags = tags
         )
+    
+    def update_likes(self,
+        number: int,
+        VIDEO_ID: int = None,
+        VIDEO_FILENAME: str = None
+        ) -> None:
+
+        """
+        ## Method used to change Like count of a video
+
+        update_likes updates the like cound of a video from the `videos` list<br>
+        given specific parameters.
+
+        Parameters
+        ----------
+        number : int
+            Number to add to the like count, can be positive or negative.
+
+        VIDEO_ID : int, optional
+            Index that leads to the video on the `videos` list, by default None
+
+        VIDEO_FILENAME : str, optional
+            Filename of the video, by default None
+
+        **Requires only one of both Video related parameters**
+
+        Raise
+        -----
+        ValueError
+            If variable was not the expected type<br>
+            If no video related arguments are provided
+        """
+        
+        # Check parameters type
+        if VIDEO_ID and not isinstance(VIDEO_ID, int):
+            raise ValueError("ERROR [VideoService]: VIDEO_ID was expected to be a int")
+        if VIDEO_FILENAME and not isinstance(VIDEO_FILENAME, str):
+            raise ValueError("ERROR [VideoService]: VIDEO_FILENAME was expected to be a str")
+        if not isinstance(number, int):
+            raise ValueError("ERROR [VideoService]: number was expected to be a int")
+        if not VIDEO_ID and not VIDEO_FILENAME:
+            raise ValueError("ERROR [VideoService]: No arguments where provided")
+        
+        self.videos.like_count(
+            number = number,
+            VIDEO_ID = VIDEO_ID,
+            VIDEO_FILENAME = VIDEO_FILENAME
+            )

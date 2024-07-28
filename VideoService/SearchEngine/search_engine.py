@@ -247,9 +247,6 @@ def filter(videos: List[Video], filter_settings: dict) -> List[Video]:
     return videos
 
 def _filter_by_date(videos: List[Video], filter: List[str]) -> List[Video]:
-    if len(filter) != 2:
-        raise "ERROR [SEARCH_ENGINE]: Filter list does not contain the requested amount of items"
-    
     if filter[1] == "0":
         return [video for video in videos if filter[0] < video.UPLOAD_DATE]
     elif filter[0] == "0":
@@ -259,9 +256,6 @@ def _filter_by_date(videos: List[Video], filter: List[str]) -> List[Video]:
 
 
 def _filter_by_length(videos: List[Video], filter: List[int]) -> None:
-    if len(filter) != 2:
-        raise "ERROR [SEARCH_ENGINE]: Filter list does not contain the requested amount of items"
-    
     if filter[1] == 0:
         return [video for video in videos if filter[0] < video.UPLOAD_DATE]
     else:

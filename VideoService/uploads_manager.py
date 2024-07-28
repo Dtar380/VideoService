@@ -25,7 +25,7 @@ from datetime import datetime
 import cv2
 
 #####  INTERNAL IMPORTS
-from videos import Videos
+from .videos import Videos
 
 ########################################
 #####  CODE                        #####

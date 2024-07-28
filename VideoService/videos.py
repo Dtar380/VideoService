@@ -206,25 +206,21 @@ class Videos:
             Contains all info about the DataBase
         """
 
-        try:
-            with open(self.DATABASE, "r+") as f:
-                data = json.loads(f.read())
+        with open(self.DATABASE, "r+") as f:
+            data = json.loads(f.read())
 
-            return [Video(
-                TITLE=video["TITLE"],
-                VIDEO_FILENAME=video["VIDEO_FILENAME"],
-                VIDEO_FILETYPE=video["VIDEO_FILETYPE"],
-                MINIATURE_FILENAME=video["MINIATURE_FILENAME"],
-                MINIATURE_FILETYPE=video["MINIATURE_FILETYPE"],
-                UPLOAD_DATE=video["UPLOAD_DATE"],
-                LENGTH=video["LENGTH"],
-                DESCRIPTION=video["DESCRIPTION"],
-                TAGS=video["TAGS"],
-                LIKES=video["LIKES"]
-            ) for video in data]
-        
-        except:
-            raise "ERROR [VIDEOS]: Couldn't get the Videos from Videos Class, check DATABASE path."
+        return [Video(
+            TITLE=video["TITLE"],
+            VIDEO_FILENAME=video["VIDEO_FILENAME"],
+            VIDEO_FILETYPE=video["VIDEO_FILETYPE"],
+            MINIATURE_FILENAME=video["MINIATURE_FILENAME"],
+            MINIATURE_FILETYPE=video["MINIATURE_FILETYPE"],
+            UPLOAD_DATE=video["UPLOAD_DATE"],
+            LENGTH=video["LENGTH"],
+            DESCRIPTION=video["DESCRIPTION"],
+            TAGS=video["TAGS"],
+            LIKES=video["LIKES"]
+        ) for video in data]
     
     # Method in charge of saving the Video objects to the JSON database
     def save_videos(self) -> None:
@@ -320,7 +316,7 @@ class Videos:
             if VIDEO_FILENAME == video.video["VIDEO_FILENAME"]:
                 return index
 
-        raise "ERROR [VIDEOS]: Given FILENAME was not found or doesn't exist"
+        raise Exception("ERROR [VIDEOS]: Given FILENAME was not found or doesn't exist")
 
     # Method in charge of deleting a Video from the videos list
     def delete_video(self,
@@ -342,6 +338,14 @@ class Videos:
             Filename of the video, by default None
 
         **Requires only one of both parameter**
+
+        Raise
+        -----
+        IndexError
+            If VIDEO_ID is not in range of amount of videos
+
+        Exception (on self.__get_by_name)
+            If VIDEO_FILENAME is not in database
         """
 
         try:
@@ -354,7 +358,50 @@ class Videos:
             self.save_videos() 
 
         except IndexError:
-            raise "ERROR [VIDEOS]: video_id not in range of self.videos"
+            raise IndexError("ERROR [VIDEOS]: video_id not in range of self.videos")
+
+    def like_count(self,
+        number: int,
+        VIDEO_ID: int = None,
+        VIDEO_FILENAME: str = None
+        ) -> None:
+
+        """
+        ## Method used to change Like count of a video
+
+        Like_count updates the like cound of a video from the `videos` list<br>
+        given specific parameters.
+
+        Parameters
+        ----------
+        number : int
+            Number to add to the like count, can be positive or negative.
+
+        VIDEO_ID : int, optional
+            Index that leads to the video on the `videos` list, by default None
+
+        VIDEO_FILENAME : str, optional
+            Filename of the video, by default None
+
+        **Requires only one of both Video related parameters**
+
+        Raise
+        -----
+        IndexError
+            If VIDEO_ID is not in range of amount of videos
+
+        Exception (on self.__get_by_name)
+            If VIDEO_FILENAME is not in database
+        """
         
-        else:
-            raise "ERROR [VIDEOS]: Didn't gave any parameters, a video ID or FILENAME is needed"
+        try:
+            if VIDEO_ID:
+                self.videos[VIDEO_ID].LIKES += number
+
+            elif VIDEO_FILENAME:
+                self.videos[self.__get_by_name(VIDEO_FILENAME=VIDEO_FILENAME)].LIKES += number
+
+            self.save_videos()
+        
+        except IndexError:
+            raise IndexError("ERROR [VIDEOS]: video_id not in range of self.videos")

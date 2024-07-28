@@ -47,11 +47,10 @@
 3. **You're good to go**
 
 ## :memo: Working On
-Currently working on the reputation system<br>
-As there hasn't been a deploy yet, Im not trying to find bugs, Im just coding and testing
+Currently working on the version compatibility of the library (I will test down to 3.8)<br>
+Started debugging and doing the Example files for giving further documentation and explanation on how to use the library<br>
 
-When I finish the 3.12 version I'll first give support for older python versions (Probably up to 3.8)<br>
-Im also thinking about adding a PlayLists/Series support, but that will be seen when I deploy the library.<br>
+I will add support for PlayLists/Series, on the next version of the library, but first we need the first deploy.<br>
 A Languages API will also be released to make it easier to have language support, instead of having the dictionaries in your own server
 
 ## :clipboard: Documentation
@@ -177,6 +176,7 @@ Raise
 -----
     ValueError
     If variable was not the expected type
+    If no arguments are provided
 -----
 
 Query : method
@@ -209,7 +209,31 @@ Raise
     WrongFilterStructure
     WrongTagsStructure
     If variable was not the expected type
--------
+-----
+
+Update likes : method
+----------------------------
+update_likes updates the like cound of a video from the `videos` list<br>
+given specific parameters.
+
+Parameters
+----------
+    number : int
+    Number to add to the like count, can be positive or negative.
+
+    VIDEO_ID : int, optional
+    Index that leads to the video on the `videos` list, by default None
+
+    VIDEO_FILENAME : str, optional
+    Filename of the video, by default None
+
+    **Requires only one of both Video related parameters**
+
+Raise
+-----
+    ValueError
+    If variable was not the expected type
+    If no video related arguments are provided
 ```
 </details>
 
@@ -451,7 +475,42 @@ Parameters
     Filename of the video, by default None
 
 -> Requires only one of both parameter
+
+Raise
+-----
+    IndexError
+    If VIDEO_ID is not in range of amount of videos
+
+    Exception (on self.__get_by_name)
+    If VIDEO_FILENAME is not in database
+-----
+
+Like count : method
+-------------------
+Like_count updates the like cound of a video from the `videos` list<br>
+given specific parameters.
+
+Parameters
 ----------
+    number : int
+    Number to add to the like count, can be positive or negative.
+
+    VIDEO_ID : int, optional
+    Index that leads to the video on the `videos` list, by default None
+
+    VIDEO_FILENAME : str, optional
+    Filename of the video, by default None
+
+    **Requires only one of both Video related parameters**
+
+Raise
+-----
+    IndexError
+    If VIDEO_ID is not in range of amount of videos
+
+    Exception (on self.__get_by_name)
+    If VIDEO_FILENAME is not in database
+-----
 ```
 
 </details>
