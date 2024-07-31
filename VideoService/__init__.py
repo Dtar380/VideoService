@@ -22,7 +22,7 @@ and an integrated Search Engine.
 from .__main__ import VideoService
 from .SearchEngine.search import Search
 
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 __description__ = "A library to create video services"
 __author__ = "Dtar380"
 __license__ = "MIT"
