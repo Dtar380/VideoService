@@ -9,16 +9,16 @@ def read(fname):
 
 def main():
     setup(
-        name=VideoService.__name__,
-        version=VideoService.__version__,
-        description=VideoService.__description__,
+        name="VideoService",
+        version="0.1.0",
+        description="A library to create video services",
         package_dir={"": "VideoService"},
         packages=find_packages(where=["VideoService"]),
         long_description=read("README.md"),
         long_description_content_type="text/markdown",
         url="",
-        author=VideoService.__author__,
-        license=VideoService.__license__,
+        author="Dtar380",
+        license="MIT",
         classifiers=[
             "License :: MIT License",
             "Programming Language :: Python :: 3.12",
