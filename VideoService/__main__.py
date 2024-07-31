@@ -83,15 +83,20 @@ class VideoService:
         
         # Check if folders/files exist and are what they are supposed to be
         if not path.exists(DATABASE) and DATABASE.split(".")[1] != "json":
-            raise DataBaseNotFound(f"ERROR [VideoService]: {DATABASE} was not found or is not a JSON")
+            error = f"ERROR [VideoService]: {DATABASE} was not found or is not a JSON"
+            raise DataBaseNotFound(error)
         if not path.isdir(MINIATURES):
-            raise FolderNotFound(f"ERROR [VideoService]: {MINIATURES} was not found")
+            error = f"ERROR [VideoService]: {MINIATURES} was not found"
+            raise FolderNotFound(error)
         if not path.isdir(VIDEOS):
-            raise FolderNotFound(f"ERROR [VideoService]: {VIDEOS} was not found")
+            error = f"ERROR [VideoService]: {VIDEOS} was not found"
+            raise FolderNotFound(error)
         if not path.isdir(UPLOADS):
-            raise FolderNotFound(f"ERROR [VideoService]: {UPLOADS} was not found")
+            error = f"ERROR [VideoService]: {UPLOADS} was not found"
+            raise FolderNotFound(error)
         if not path.isdir(LANGUAGES):
-            raise FolderNotFound(f"ERROR [VideoService]: {LANGUAGES} was not found")
+            error = f"ERROR [VideoService]: {LANGUAGES} was not found"
+            raise FolderNotFound(error)
 
         self.DATABASE = DATABASE
         self.VIDEOS = VIDEOS
@@ -121,7 +126,7 @@ class VideoService:
     def upload(self, 
         TITLE: str, 
         VIDEO_FILENAME: str, 
-        MINIATURE_FILENAME: str, 
+        MINIATURE_FILENAME: str = None, 
         DESCRIPTION: str = None, 
         TAGS: List[str] = None
         ) -> None:
@@ -160,7 +165,7 @@ class VideoService:
             raise ValueError("ERROR [VideoService]: TITLE was expected to be a str")
         if not isinstance(VIDEO_FILENAME, str):
             raise ValueError("ERROR [VideoService]: VIDEO_FILENAME was expected to be a str")
-        if not isinstance(MINIATURE_FILENAME, str):
+        if MINIATURE_FILENAME and not isinstance(MINIATURE_FILENAME, str):
             raise ValueError("ERROR [VideoService]: MINIATURE_FILENAME was expected to be a str")
         if DESCRIPTION and not isinstance(DESCRIPTION, str):
             raise ValueError("ERROR [VideoService]: DESCRIPTION was expected to be a str")
@@ -169,9 +174,11 @@ class VideoService:
 
         # Check that files exist
         if not path.isfile(path.join(self.UPLOADS, VIDEO_FILENAME)):
-            raise FileNotFoundError(f"ERROR [VideoService]: {VIDEO_FILENAME} was not found")
-        if not path.isfile(path.join(self.UPLOADS, MINIATURE_FILENAME)):
-            raise FileNotFoundError(f"ERROR [VideoService]: {MINIATURE_FILENAME} was not found")
+            error = f"ERROR [VideoService]: {VIDEO_FILENAME} was not found"
+            raise FileNotFoundError(error)
+        if MINIATURE_FILENAME and not path.isfile(path.join(self.UPLOADS, MINIATURE_FILENAME)):
+            error = f"ERROR [VideoService]: {MINIATURE_FILENAME} was not found"
+            raise FileNotFoundError(error)
 
         self.videos = self.uploads.upload(
             videos = self.videos,
@@ -223,11 +230,11 @@ class VideoService:
         """
 
         # Check parameters type
-        if VIDEO_ID and not isinstance(VIDEO_ID, int):
+        if VIDEO_ID != None and not isinstance(VIDEO_ID, int):
             raise ValueError("ERROR [VideoService]: VIDEO_ID was expected to be a int")
         if VIDEO_FILENAME and not isinstance(VIDEO_FILENAME, str):
             raise ValueError("ERROR [VideoService]: VIDEO_FILENAME was expected to be a str")
-        if not VIDEO_ID and not VIDEO_FILENAME:
+        if VIDEO_ID == None and not VIDEO_FILENAME:
             raise ValueError("ERROR [VideoService]: No arguments where provided")
 
         self.videos.delete_video(
@@ -285,7 +292,7 @@ class VideoService:
 
         return Search(
             query = query,
-            videos = self.videos,
+            videos = self.videos.videos,
             LANGUAGES = self.LANGUAGES,
             order_settings = order_settings,
             filter_settings = filter_settings,
@@ -325,13 +332,13 @@ class VideoService:
         """
         
         # Check parameters type
-        if VIDEO_ID and not isinstance(VIDEO_ID, int):
+        if VIDEO_ID != None and not isinstance(VIDEO_ID, int):
             raise ValueError("ERROR [VideoService]: VIDEO_ID was expected to be a int")
         if VIDEO_FILENAME and not isinstance(VIDEO_FILENAME, str):
             raise ValueError("ERROR [VideoService]: VIDEO_FILENAME was expected to be a str")
         if not isinstance(number, int):
             raise ValueError("ERROR [VideoService]: number was expected to be a int")
-        if not VIDEO_ID and not VIDEO_FILENAME:
+        if VIDEO_ID == None and not VIDEO_FILENAME:
             raise ValueError("ERROR [VideoService]: No arguments where provided")
         
         self.videos.like_count(

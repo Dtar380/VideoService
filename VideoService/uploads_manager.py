@@ -154,11 +154,11 @@ class UploadManager:
             index: int
         ) -> str:
         
-        file = path.join(self.VIDEOS, file_name)
+        file = path.join(self.UPLOADS, file_name)
         vidObj = cv2.VideoCapture(file)
         success, image = vidObj.read()
-        new_name = f"Miniature_{index}.jpg"
-        cv2.imwrite(path.join(self.MINIATURES, file_name), image)
+        new_name = f"miniature_{index}.jpg"
+        cv2.imwrite(path.join(self.MINIATURES, new_name), image)
         return new_name
 
     # Private method for renaming uploaded files to have an structured naming order
@@ -169,7 +169,7 @@ class UploadManager:
         ) -> str:
 
         old_dist = path.join(self.UPLOADS, file_name)
-        new_name = f"{file_type}_{index}.{file_name.split(".")[1]}"
+        new_name = f"{file_type}_{index}.{file_name.split('.')[1]}"
         new_dist = path.join(self.UPLOADS, new_name)
         rename(old_dist, new_dist)
         return new_name

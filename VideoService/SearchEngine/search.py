@@ -45,7 +45,7 @@ class Search:
                 "active": False
                 }
         },
-        tags: list[str] = None
+        tags: List[str] = None
         ) -> None:
 
         """

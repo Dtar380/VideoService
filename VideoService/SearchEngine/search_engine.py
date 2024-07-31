@@ -158,7 +158,7 @@ def _filter_by_query(videos: List[Video], query_words: QueryWords) -> List[Video
 def order(videos: List[Video], 
     order_settings: list,
     title: str = None,
-    tags: list[str] = None
+    tags: List[str] = None
     ) -> List[Video]:
     
     """

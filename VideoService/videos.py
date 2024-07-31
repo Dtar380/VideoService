@@ -45,9 +45,9 @@ class Video:
         MINIATURE_FILETYPE: str,
         UPLOAD_DATE: str,
         LENGTH: int,
-        DESCRIPTION: str = "",
-        TAGS: List[str] = [""],
-        LIKES: int = 0
+        DESCRIPTION: str = None,
+        TAGS: List[str] = None,
+        LIKES: int = None
         ) -> None:
 
         """
@@ -93,9 +93,10 @@ class Video:
         self.MINIATURE_FILETYPE = MINIATURE_FILETYPE
         self.UPLOAD_DATE = UPLOAD_DATE
         self.LENGTH = LENGTH
-        self.DESCRIPTION = DESCRIPTION
-        self.TAGS = TAGS
-        self.LIKES = LIKES
+
+        self.DESCRIPTION = DESCRIPTION if DESCRIPTION else ""
+        self.TAGS = TAGS if TAGS else [""]
+        self.LIKES = LIKES if LIKES else 0
 
     # Method to be called when printing object
     def __str__(self) -> str:
@@ -186,7 +187,7 @@ class Videos:
         with open(DATABASE, "r+") as f:
             DataBase_length = len(f.read())
 
-        if len(DataBase_length) <= 6:
+        if DataBase_length <= 6:
             self.videos = self.load_videos()
         else:
             self.videos: List[Video] = []
@@ -348,14 +349,16 @@ class Videos:
             If VIDEO_FILENAME is not in database
         """
 
+        print(VIDEO_ID)
+
         try:
-            if VIDEO_ID:
+            if VIDEO_ID != None:
                 del self.videos[VIDEO_ID]
 
             elif VIDEO_FILENAME:
                 del self.videos[self.__get_by_name(VIDEO_FILENAME=VIDEO_FILENAME)]
 
-            self.save_videos() 
+            self.save_videos()
 
         except IndexError:
             raise IndexError("ERROR [VIDEOS]: video_id not in range of self.videos")
@@ -393,9 +396,9 @@ class Videos:
         Exception (on self.__get_by_name)
             If VIDEO_FILENAME is not in database
         """
-        
+
         try:
-            if VIDEO_ID:
+            if VIDEO_ID != None:
                 self.videos[VIDEO_ID].LIKES += number
 
             elif VIDEO_FILENAME:
