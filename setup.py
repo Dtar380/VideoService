@@ -1,26 +1,24 @@
 from setuptools import find_packages, setup
 from os import path
 
-from VideoService import __name__, __version__, __description__, __author__, __license__
-
 def read(fname):
     with open(path.join(path.dirname(__file__), fname), encoding="utf-8") as f:
         return f.read()
 
 def main():
     setup(
-        name=VideoService.__name__,
-        version=VideoService.__version__,
-        description=VideoService.__description__,
+        name="VideoService",
+        version="0.1.1",
+        description="A library to create video services",
         package_dir={"": "VideoService"},
         packages=find_packages(where=["VideoService"]),
         long_description=read("README.md"),
         long_description_content_type="text/markdown",
         url="",
-        author=VideoService.__author__,
-        license=VideoService.__license__,
+        author="Dtar380",
+        license="MIT",
         classifiers=[
-            "License :: OSI Approved :: MIT License",
+            "License :: MIT License",
             "Programming Language :: Python :: 3.12",
             "Operating System :: OS Independent"
         ],
