@@ -2,5 +2,7 @@
 /.vscode/
 /tests/
 /Unit Testing/
+/VideoService/__pycache__/
+/VideoService/SearchEngine/__pycache__/
 todo.txt
 unit_testing.py
