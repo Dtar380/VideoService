@@ -1,8 +1,6 @@
 from setuptools import find_packages, setup
 from os import path
 
-import VideoService
-
 def read(fname):
     with open(path.join(path.dirname(__file__), fname), encoding="utf-8") as f:
         return f.read()
