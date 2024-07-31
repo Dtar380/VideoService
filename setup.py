@@ -8,7 +8,7 @@ def read(fname):
 def main():
     setup(
         name="VideoService",
-        version="0.1.0",
+        version="0.1.1",
         description="A library to create video services",
         package_dir={"": "VideoService"},
         packages=find_packages(where=["VideoService"]),
