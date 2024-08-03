@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="assets/logo.png">
+    <img src="https://raw.githubusercontent.com/Dtar380/VideoService/main/assets/logo.png">
 </p>
 <br>
 

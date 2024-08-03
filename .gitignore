@@ -2,6 +2,11 @@
 /.vscode/
 /tests/
 /Unit Testing/
-__pycache__/
+/VideoService/__pycache__/
+/VideoService/SearchEngine/__pycache__/
+/dist/
+/build/
+/VideoService/VideoService.egg-info/
 todo.txt
 unit_testing.py
+api_token.txt

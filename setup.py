@@ -23,7 +23,7 @@ def main():
             "Repository": "https://github.com/Dtar380/VideoService"
         },
         classifiers=[
-            "Development Status :: 4-Beta",
+            "Development Status :: 4 - Beta",
 
             "Intended Audience :: Developers",
 
