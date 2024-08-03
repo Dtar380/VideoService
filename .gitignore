@@ -1,12 +1,19 @@
-/.venv/
-/.vscode/
-/tests/
-/Unit Testing/
-/VideoService/__pycache__/
-/VideoService/SearchEngine/__pycache__/
-/dist/
-/build/
-/VideoService/VideoService.egg-info/
+# PYTHON DIRECTORIES
+.venv/
+__pycache__/
+dist/
+build/
+*.egg-info/
+
+# PYTHON FILES
+*.py[cod]
+
+# USER DIRECTORIES
+.vscode/
+tests/
+Unit Testing/
+
+# USER FILES
 todo.txt
 unit_testing.py
 api_token.txt

@@ -1,29 +1,31 @@
 from setuptools import find_packages, setup
 from os import path
 
+from VideoService import __name__, __author__, __description__, __license__, __version__, __status__
+
 def read(fname):
     with open(path.join(path.dirname(__file__), fname), encoding="utf-8") as f:
         return f.read()
 
 def main():
     setup(
-        name="VideoService",
-        version="0.1.2",
-        description="A library to create video services",
+        name=__name__,
+        version=__version__,
+        description=__description__,
         package_dir={"": "VideoService"},
         packages=find_packages(where=["VideoService"]),
         long_description=read("README.md"),
         long_description_content_type="text/markdown",
         url="https://github.com/Dtar380/VideoService",
-        author="Dtar380",
-        license="MIT",
+        author=__author__,
+        license=__license__,
         project_urls={
             "Homepage": "https://github.com/Dtar380/VideoService",
             "Documentation": "https://github.com/Dtar380/VideoService/blob/main/README.md",
             "Repository": "https://github.com/Dtar380/VideoService"
         },
         classifiers=[
-            "Development Status :: 4 - Beta",
+            "Development Status :: {}".format(__status__),
 
             "Intended Audience :: Developers",
 
@@ -33,7 +35,7 @@ def main():
 
             "Operating System :: OS Independent",
 
-            "License :: OSI Approved :: MIT License",
+            "License :: OSI Approved :: {} License".format(__license__),
 
             "Programming Language :: Python :: 3",
             "Programming Language :: Python :: 3.8",
