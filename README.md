@@ -35,7 +35,7 @@
 
 ## :arrow_down: Install package
 
-#### Make sure you running on Python 3.12 (No support for other versions now)
+#### Make sure you running on Python 3.8 or above
 
 ### PIP
 - #### **If you want user intended version, run:**`pip install VideoService`
@@ -47,9 +47,6 @@
 3. **You're good to go**
 
 ## :memo: Working On
-Currently working on the version compatibility of the library (I will test down to 3.8)<br>
-Started debugging and doing the Example files for giving further documentation and explanation on how to use the library<br>
-
 I will add support for PlayLists/Series, on the next version of the library, but first we need the first deploy.<br>
 A Languages API will also be released to make it easier to have language support, instead of having the dictionaries in your own server
 
