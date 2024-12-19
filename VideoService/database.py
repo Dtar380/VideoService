@@ -3,6 +3,7 @@ import os
 
 from .video import Video
 from .playlist import Playlist
+from .files_manager import FileManager
 
 class Database:
 
@@ -79,7 +80,16 @@ class Database:
 
     def delete_video(self, video_: Video) -> None:
         try:
+            files = [
+                [video_.video.get("VIDEO_FILENAME"), self.VIDEOS],
+                [video_.video.get("THUMBNAIL_FILENAME"), self.THUMBNAILS]
+            ]
+
+            for file in files:
+                FileManager.delete_file(*file)
+
             self.videos.remove(video_)
+
         except:
             pass # ! Give an error here
         self.save_videos()
