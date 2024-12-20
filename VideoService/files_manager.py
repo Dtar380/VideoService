@@ -3,6 +3,7 @@ from os import path, listdir, rename, remove
 from datetime import datetime
 
 from .video import Video
+from .__errors__ import error_parser
 
 class FileManager:
 
@@ -66,8 +67,8 @@ class FileManager:
         try:
             file = path.join(directory, file_name)
             remove(file)
-        except:
-            pass # ! Give an error here
+        except Exception as error:
+            print(error_parser(error))
 
     def __upload_to_database(self, files: list) -> None:
         for file in files:
