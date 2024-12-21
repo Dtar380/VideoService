@@ -13,7 +13,8 @@ class Video:
         LENGTH: int,
         DESCRIPTION: str = None,
         TAGS: list[str] = None,
-        LIKES: int = None
+        LIKES: int = None,
+        VIEWS: int = None
     ) -> None:
 
         self.TITLE = TITLE
@@ -28,7 +29,8 @@ class Video:
 
         self.DESCRIPTION = DESCRIPTION if DESCRIPTION else ""
         self.TAGS = TAGS if TAGS else [""]
-        self.LIKES = LIKES if LIKES else 0
+        self.LIKES = LIKES or 0
+        self.VIEWS = VIEWS if VIEWS else 0
 
     # Method to be called when printing object
     def __str__(self) -> str:
@@ -52,3 +54,9 @@ class Video:
         }
 
         return video_json
+
+    def update_likes(self, likes: int) -> None:
+        self.LIKES += likes
+
+    def update_views(self, views: int) -> None:
+        self.VIEWS += views

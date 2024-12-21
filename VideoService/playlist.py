@@ -1,4 +1,5 @@
 from .video import Video
+from .__errors__ import *
 
 class Playlist:
 
@@ -40,8 +41,24 @@ class Playlist:
 
         return playlist_json
 
-    def add_video(self, video: Video) -> None:
-        self.videos.append(video.video)
+    def add_video(self, video_: Video) -> None:
+        try:
+            videos = [video for video in self.videos]
+            if video_.video in videos:
+                raise AlreadyExistsError("ERROR [Playlist]: The video already exists in the playlist")
+            else:
+                self.videos.append(video_.video)
+
+        except Exception as error:
+            error_parser(error)
 
     def remove_video(self, video: Video) -> None:
-        self.videos.remove(video.video)
+        try:
+            videos = [video for video in self.videos]
+            if video.video in videos:
+                self.videos.remove(video.video)
+            else:
+                raise NotFoundError("ERROR [Playlist]: The video does not exist in the playlist")
+
+        except Exception as error:
+            error_parser(error)

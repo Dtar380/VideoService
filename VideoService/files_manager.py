@@ -1,5 +1,5 @@
-from shutil import move
-from os import path, listdir, rename, remove
+import shutil
+import os
 from datetime import datetime
 
 from .video import Video
@@ -17,14 +17,14 @@ class FileManager:
         self.VIDEOS = VIDEOS
         self.THUMBNAILS = THUMBNAILS
 
-    def upload_file(self, **kwargs) -> Video | None:
+    def upload_file(self, **kwargs) -> Video | dict:
         video_filename = kwargs.get("VIDEO_FILENAME") or None
         thumbnail_filename = kwargs.get("THUMBNAIL_FILENAME") or None
 
         if not video_filename:
-            return None
+            return {"message": "ERROR [FileManager]: 'VIDEO_FILENAME' is required"}
 
-        index = len(listdir(self.VIDEOS))
+        index = len(os.listdir(self.VIDEOS))
 
         video_filename = self.__rename_file(
             file = video_filename,
@@ -65,31 +65,31 @@ class FileManager:
     @staticmethod
     def delete_file(file_name: str, directory: str) -> None:
         try:
-            file = path.join(directory, file_name)
-            remove(file)
+            file = os.path.join(directory, file_name)
+            os.remove(file)
         except Exception as error:
             print(error_parser(error))
 
     def __upload_to_database(self, files: list) -> None:
         for file in files:
-            source_dist = path.join(self.UPLOADS, file)
-            destiny_dist = path.join(
+            source_dist = os.path.join(self.UPLOADS, file)
+            destiny_dist = os.path.join(
                 self.VIDEOS if "video" in file else self.THUMBNAILS,
                 file
             )
-            move(source_dist, destiny_dist)
+            shutil.move(source_dist, destiny_dist)
 
     def __rename_file(self, file_name: str, file_type: str, index: int) -> str:
-        old_dist = path.join(self.UPLOADS, file_name)
+        old_dist = os.path.join(self.UPLOADS, file_name)
         new_name = f"{file_type}_{index}.{file_name.split('.')[1]}"
-        new_dist = path.join(self.UPLOADS, new_name)
-        rename(old_dist, new_dist)
+        new_dist = os.path.join(self.UPLOADS, new_name)
+        os.rename(old_dist, new_dist)
         return new_name
 
     def __create_thumbnail(self, file_name: str, index: int) -> str:
-        file = path.join(self.UPLOADS, file_name)
+        file = os.path.join(self.UPLOADS, file_name)
         # ! Add CV2 logic for creating thumbnails
 
     def __get_length(self, file_name: str) -> int:
-        file = path.join(self.VIDEOS, file_name)
+        file = os.path.join(self.VIDEOS, file_name)
         # ! Add CV2 logic for getting video length
