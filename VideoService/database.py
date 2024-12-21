@@ -44,19 +44,19 @@ class Database:
             self.playlists = [Playlist(**playlist) for playlist in data]
 
     # Save videos and playlists to the database
-    def save_videos(self) -> None:
+    def save_videos(self) -> dict:
         try:
             data = [video.video for video in self.videos]
             with open(f"{self.DATABASE}\\{self.DATABASES[0]}", "w") as file:
                 json.dump(data, file)
-                
+
         except Exception as error:
             print(error_parser(error))
             return {"message": "An error occurred while saving the videos"}
 
         return {"message": "Videos saved successfully"}
 
-    def save_playlists(self) -> None:
+    def save_playlists(self) -> dict:
         try:
             data = [playlist.playlist for playlist in self.playlists]
             with open(f"{self.DATABASE}\\{self.DATABASES[1]}", "w") as file:

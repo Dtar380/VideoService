@@ -48,7 +48,7 @@ class VideoService:
         THUMBNAIL_FILENAME: str = None,
         DESCRIPTION: str = None,
         TAGS: list[str] = None
-    ) -> None:
+    ) -> dict:
 
         try:
             for value in [TITLE, VIDEO_FILENAME, OWNER, VISIBILITY, THUMBNAIL_FILENAME, DESCRIPTION]:
