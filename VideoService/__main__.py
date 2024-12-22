@@ -1,348 +1,462 @@
-########################################
-#####  IMPORTING MODULES           #####
-########################################
 
-#####  INTERNAL IMPORTS
+#################################################*
+##### ***  IMPORTS  *** #########################*
+#################################################*
 
-# PYTHON BUILT-IN
-from typing import List, Union, Dict
-from os import path
+# *** Python modules *** #
+import os
 
-#####  INTERNAL IMPORTS
-from .videos import *
-from .uploads_manager import *
-from .SearchEngine.search import *
+# *** Internal modules *** #
+from .database import Database
+from .files_manager import FileManager
+from .video import Video
+from .playlist import Playlist
 from .__errors__ import *
 
-########################################
-#####  CODE                        #####
-########################################
+#################################################*
+##### ***  IMPORTS  *** #########################*
+#################################################*
 
-#####  CLASS
+### *** VIDEO SERVICE CLASS *** ###
 class VideoService:
 
     """
     VideoService
     ------------
-    Main class of Video Service library (and the only class you'll need 😉)<br>
-    This class will manage all the backend of the service, and you will just<br>
+    Main class of Video Service library (and the only class you'll need 😉).
+
+    This class will manage all the backend of the service, and you will just
     need to call it's methods when required by the server.
     """
 
+    ## *** CLASS CONSTRUCTOR *** ##
     def __init__(self,
-        DATABASE: str,
-        MINIATURES: str,
-        VIDEOS: str,
-        UPLOADS: str,
-        LANGUAGES: str
-        ) -> None:
+        DATABASE: str = ".\\Database",
+        VIDEOS: str = ".\\Database\\Videos",
+        THUMBNAILS: str = ".\\Database\\THUMBNAILS",
+        UPLOADS: str = ".\\Uploads"
+    ) -> None:
 
-        """## Constructor function of VideoService class
+        """
+        ## Class Constructor
 
         Parameters
         ----------
-        DATABASE : str
-            Path to the DataBase JSON file
+        DATABASE : str, optional
+            Path to the database file.
 
-        MINIATURES : str
-            Path to the Miniatures folder
+        VIDEOS : str, optional
+            Path to the videos folder.
 
-        VIDEOS : str
-            Path to the Videos folder
+        THUMBNAILS : str, optional
+            Path to the thumbnails folder.
 
-        UPLOADS : str
-            Path to the Uploads folder
+        UPLOADS : str, optional
+            Path to the uploads folder.
 
-        LANGUAGES : str
-            Path to the languages DataBase folder
+        Raises
+        ------
+        TypeError
+            If the paths are not strings.
 
-        Raise
-        -----
-        ValueError 
-            If variable was not the expected type
-
-        DataBaseNotFound
-            If DataBase JSON was not found
-
-        FolderNotFound
-            If folder was not found
+        NotFoundError
+            If the paths do not exist.
         """
 
-
-        # Check parameters types
-        if not isinstance(DATABASE, str):
-            raise ValueError("ERROR [VideoService]: DATABASE was expected to be a string")
-        if not isinstance(MINIATURES, str):
-            raise ValueError("ERROR [VideoService]: MINIATURES was expected to be a string")
-        if not isinstance(VIDEOS, str):
-            raise ValueError("ERROR [VideoService]: VIDEOS was expected to be a string")
-        if not isinstance(UPLOADS, str):
-            raise ValueError("ERROR [VideoService]: UPLOADS was expected to be a string")
-        if not isinstance(LANGUAGES, str):
-            raise ValueError("ERROR [VideoService]: LANGUAGES was expected to be a string")
-        
-        # Check if folders/files exist and are what they are supposed to be
-        if not path.exists(DATABASE) and DATABASE.split(".")[1] != "json":
-            error = f"ERROR [VideoService]: {DATABASE} was not found or is not a JSON"
-            raise DataBaseNotFound(error)
-        if not path.isdir(MINIATURES):
-            error = f"ERROR [VideoService]: {MINIATURES} was not found"
-            raise FolderNotFound(error)
-        if not path.isdir(VIDEOS):
-            error = f"ERROR [VideoService]: {VIDEOS} was not found"
-            raise FolderNotFound(error)
-        if not path.isdir(UPLOADS):
-            error = f"ERROR [VideoService]: {UPLOADS} was not found"
-            raise FolderNotFound(error)
-        if not path.isdir(LANGUAGES):
-            error = f"ERROR [VideoService]: {LANGUAGES} was not found"
-            raise FolderNotFound(error)
-
-        self.DATABASE = DATABASE
-        self.VIDEOS = VIDEOS
-        self.MINIATURES = MINIATURES
-        self.UPLOADS = UPLOADS
-        self.LANGUAGES = LANGUAGES
-
-        self.videos = self.__init_database()
-        self.uploads = self.__init_uploads_manager()
-
-    # PRIVATE METHOD TO INITIALISE THE DATABASE
-    def __init_database(self) -> Videos:
-        return Videos(
-            DATABASE = self.DATABASE,
-            MINIATURES = self.MINIATURES,
-            VIDEOS = self.VIDEOS
+        # Check if arguments are valid
+        args_handling(
+            init=True,
+            DATABASE=DATABASE,
+            VIDEOS=VIDEOS,
+            THUMBNAILS=THUMBNAILS,
+            UPLOADS=UPLOADS
         )
 
-    # PRIVATE METHOD TO INITIALISES THE UPLOADS MANAGER
-    def __init_uploads_manager(self) -> UploadManager:
-        return UploadManager(
-            UPLOADS = self.UPLOADS,
-            MINIATURES = self.MINIATURES,
-            VIDEOS = self.VIDEOS
+        # Set arguments as class attributes
+        self.DB_PATH = DATABASE
+        self.VIDEOS_PATH = VIDEOS
+        self.THUMBNAILS_PATH = THUMBNAILS
+        self.UPLOADS_PATH = UPLOADS
+
+        # Create instances of Database and FileManager
+        self.database = Database(
+            DATABASE=DATABASE,
+            VIDEOS=VIDEOS,
+            THUMBNAILS=THUMBNAILS
+        )
+        self.file_manager = FileManager(
+            VIDEOS=VIDEOS,
+            THUMBNAILS=THUMBNAILS,
+            UPLOADS=UPLOADS
         )
 
-    def upload(self, 
-        TITLE: str, 
-        VIDEO_FILENAME: str, 
-        MINIATURE_FILENAME: str = None, 
-        DESCRIPTION: str = None, 
-        TAGS: List[str] = None
-        ) -> None:
+    ## *** CLASS METHODS *** ##
+    # *** UPLOAD VIDEO TO SERVER AND DATABASE *** #
+    def upload(self,
+        TITLE: str,
+        VIDEO_FILENAME: str,
+        OWNER: str,
+        VISIBILITY: str,
+        THUMBNAIL_FILENAME: str = None,
+        DESCRIPTION: str = None,
+        TAGS: list[str] = None
+    ) -> dict:
 
         """
-        ## Method used to upload files to the DataBase
+        ## Upload
+        Function to upload a video to the server and database.
 
         Parameters
         ----------
         TITLE : str
-            Title provided for the video
+            Title of the video.
 
         VIDEO_FILENAME : str
-            File name of the video
+            Filename of the video.
 
-        MINIATURE_FILENAME : str, optional
-            File name of the miniature for the video , by default None
+        OWNER : str
+            Owner of the video.
+
+        VISIBILITY : str
+            Visibility of the video.
+
+        THUMBNAIL_FILENAME : str, optional
+            Filename of the thumbnail.
 
         DESCRIPTION : str, optional
-            Description for the video, by default None
+            Description of the video.
 
         TAGS : list[str], optional
-            Tags for the video, by default None
-
-        Raise
-        -----
-        ValueError
-            If variable was not the expected type
-
-        FolderNotFound
-            If folder was not found
-        """
-
-        # Check parameters types
-        if not isinstance(TITLE, str):
-            raise ValueError("ERROR [VideoService]: TITLE was expected to be a str")
-        if not isinstance(VIDEO_FILENAME, str):
-            raise ValueError("ERROR [VideoService]: VIDEO_FILENAME was expected to be a str")
-        if MINIATURE_FILENAME and not isinstance(MINIATURE_FILENAME, str):
-            raise ValueError("ERROR [VideoService]: MINIATURE_FILENAME was expected to be a str")
-        if DESCRIPTION and not isinstance(DESCRIPTION, str):
-            raise ValueError("ERROR [VideoService]: DESCRIPTION was expected to be a str")
-        if TAGS and not check_tags(TAGS):
-            raise ValueError("ERROR [VideoService]: TAGS was expected to be a list[str]")
-
-        # Check that files exist
-        if not path.isfile(path.join(self.UPLOADS, VIDEO_FILENAME)):
-            error = f"ERROR [VideoService]: {VIDEO_FILENAME} was not found"
-            raise FileNotFoundError(error)
-        if MINIATURE_FILENAME and not path.isfile(path.join(self.UPLOADS, MINIATURE_FILENAME)):
-            error = f"ERROR [VideoService]: {MINIATURE_FILENAME} was not found"
-            raise FileNotFoundError(error)
-
-        self.videos = self.uploads.upload(
-            videos = self.videos,
-            TITLE = TITLE,
-            VIDEO_FILENAME = VIDEO_FILENAME,
-            MINIATURE_FILENAME = MINIATURE_FILENAME,
-            DESCRIPTION = DESCRIPTION,
-            TAGS = TAGS
-        )
-
-    def save_videos(self):
-
-
-        """
-        ## Method used to save videos to the DataBase
-
-        Save_videos transforms the `videos` list to a dictionary to then save it<br>
-        to the DataBase JSON file.
-        Automatically performed by the server when a new Video is uploaded.
-        """
-
-        self.videos.save_videos()
-
-    def delete_video(self,
-        VIDEO_ID: int = None,
-        VIDEO_FILENAME: str = None
-        ) -> None:
-
-        """
-        ## Method used to delete videos from the DataBase
-
-        Delete_video deletes a video from the `videos` list given specific parameters.
-
-        Parameters
-        ----------
-        VIDEO_ID : int, optional
-            Index that leads to the video on the `videos` list, by default None
-
-        VIDEO_FILENAME : str, optional
-            Filename of the video, by default None
-
-        **Requires only one of both parameter**
-
-        Raise
-        -----
-        ValueError
-            If variable was not the expected type<br>
-            If no arguments are provided
-        """
-
-        # Check parameters type
-        if VIDEO_ID != None and not isinstance(VIDEO_ID, int):
-            raise ValueError("ERROR [VideoService]: VIDEO_ID was expected to be a int")
-        if VIDEO_FILENAME and not isinstance(VIDEO_FILENAME, str):
-            raise ValueError("ERROR [VideoService]: VIDEO_FILENAME was expected to be a str")
-        if VIDEO_ID == None and not VIDEO_FILENAME:
-            raise ValueError("ERROR [VideoService]: No arguments where provided")
-
-        self.videos.delete_video(
-            VIDEO_ID=VIDEO_ID,
-            VIDEO_FILENAME=VIDEO_FILENAME
-        )
-
-    def query(self,
-        query: str,
-        order_settings: List[ Union[ str, bool]] = None,
-        filter_settings: Dict[str, Dict[str, Union[List[Union[str, int]], bool]]] = None,
-        tags: List[str] = None
-        ) -> Search:
-
-        """
-        ## Method used to perform a query
-        
-        Parameters
-        ----------
-        query : str
-            Contains the searched value
-
-        order_settings : list[str | bool]
-            Contains what to order with and direction
-
-        filter_settings : dict[str, dict[str, List[str | int] | bool]]
-            Contains what to filter with
-
-        tags : list[str], optional
-            Tags assigned when upload, by default None
+            Tags of the video.
 
         Returns
         -------
-        Search : Search
-            Contains all info about the query
-
-        Raise
-        -----
-            **ValueError**<br>
-            **WrongOrderStructure**<br>
-            **WrongFilterStructure**<br>
-            **WrongTagsStructure**<br>
-            If variable was not the expected type
+        dict
+            A dictionary with the result of the operation.
         """
 
-        # Check parameters type
-        if not isinstance(query, str):
-            raise ValueError("ERROR [VideoService]: query was expected to be a str")
-        if order_settings and check_order_settings(order_settings):
-            raise WrongOrderStructure("ERROR [VideoService]: order_settings was given a wrong structure, see documentation")
-        if filter_settings and check_filter_settings(filter_settings):
-            raise WrongFilterStructure("ERROR [VideoService]: filter_settings was given a wrong structure, see documentation")
-        if tags and check_tags(tags):
-            raise WrongTagsStructure("ERROR [VideoService]: tags was given a wrong structure, see documentation")
+        try:
+            # Check if arguments are valid
+            args_handling(
+                init=False,
+                TITLE=TITLE,
+                VIDEO_FILENAME=VIDEO_FILENAME,
+                OWNER=OWNER,
+                VISIBILITY=VISIBILITY,
+                THUMBNAIL_FILENAME=THUMBNAIL_FILENAME,
+                DESCRIPTION=DESCRIPTION,
+                TAGS=TAGS
+            )
 
-        return Search(
-            query = query,
-            videos = self.videos.videos,
-            LANGUAGES = self.LANGUAGES,
-            order_settings = order_settings,
-            filter_settings = filter_settings,
-            tags = tags
+            # Check if files exist
+            if not os.path.isfile(os.path.join(self.UPLOADS_PATH, VIDEO_FILENAME)):
+                raise FileNotFoundError(f"ERROR [VideoService]: The file '{VIDEO_FILENAME}' does not exist")
+            if THUMBNAIL_FILENAME and not os.path.isfile(os.path.join(self.UPLOADS_PATH, THUMBNAIL_FILENAME)):
+                raise FileNotFoundError(f"ERROR [VideoService]: The file '{THUMBNAIL_FILENAME}' does not exist")
+
+        except Exception as error:
+            # Print error and return message
+            error = error_parser(error)
+            print(error)
+            return {
+                "message": error,
+                "status": 500
+            }
+
+        # Upload the files to the server and get the result
+        video_ = self.file_manager.upload_file(
+            TITLE=TITLE,
+            VIDEO_FILENAME=VIDEO_FILENAME,
+            OWNER=OWNER,
+            VISIBILITY=VISIBILITY,
+            THUMBNAIL_FILENAME=THUMBNAIL_FILENAME,
+            DESCRIPTION=DESCRIPTION,
+            TAGS=TAGS
         )
-    
-    def update_likes(self,
-        number: int,
-        VIDEO_ID: int = None,
-        VIDEO_FILENAME: str = None
-        ) -> None:
+
+        # Check if 'video_' is a dictionary
+        if isinstance(video_, dict):
+            return video_
+
+        # Return the result of 'add_video' method
+        return self.database.add_video(video_=video_)
+
+    # *** CREATE PLAYLIST *** #
+    def create_playlist(self,
+        TITLE: str,
+        OWNER: str,
+        VISIBILITY: str,
+        DESCRIPTION: str = None,
+        TAGS: list[str] = None,
+    ) -> dict:
 
         """
-        ## Method used to change Like count of a video
-
-        update_likes updates the like cound of a video from the `videos` list<br>
-        given specific parameters.
+        ## Create Playlist
+        Function to create a playlist.
 
         Parameters
         ----------
-        number : int
-            Number to add to the like count, can be positive or negative.
+        TITLE : str
+            Title of the playlist.
 
-        VIDEO_ID : int, optional
-            Index that leads to the video on the `videos` list, by default None
+        OWNER : str
+            Owner of the playlist.
 
-        VIDEO_FILENAME : str, optional
-            Filename of the video, by default None
+        VISIBILITY : str
+            Visibility of the playlist.
 
-        **Requires only one of both Video related parameters**
+        DESCRIPTION : str, optional
+            Description of the playlist.
 
-        Raise
-        -----
-        ValueError
-            If variable was not the expected type<br>
-            If no video related arguments are provided
+        TAGS : list[str], optional
+            Tags of the playlist.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
         """
-        
-        # Check parameters type
-        if VIDEO_ID != None and not isinstance(VIDEO_ID, int):
-            raise ValueError("ERROR [VideoService]: VIDEO_ID was expected to be a int")
-        if VIDEO_FILENAME and not isinstance(VIDEO_FILENAME, str):
-            raise ValueError("ERROR [VideoService]: VIDEO_FILENAME was expected to be a str")
-        if not isinstance(number, int):
-            raise ValueError("ERROR [VideoService]: number was expected to be a int")
-        if VIDEO_ID == None and not VIDEO_FILENAME:
-            raise ValueError("ERROR [VideoService]: No arguments where provided")
-        
-        self.videos.like_count(
-            number = number,
-            VIDEO_ID = VIDEO_ID,
-            VIDEO_FILENAME = VIDEO_FILENAME
+
+        try:
+            # Check if arguments are valid
+            args_handling(
+                init=False,
+                TITLE=TITLE,
+                OWNER=OWNER,
+                VISIBILITY=VISIBILITY,
+                DESCRIPTION=DESCRIPTION,
+                TAGS=TAGS
             )
+
+        except Exception as error:
+            # Print error and return message
+            error = error_parser(error)
+            print(error)
+            return {
+                "message": error,
+                "status": 500
+            }
+
+        # Return the result of 'add_playlist' method
+        return self.database.add_playlist(
+            # Pass the result of 'create_playlist' method as 'playlist_'
+            playlist_ = Playlist(
+                TITLE=TITLE,
+                OWNER=OWNER,
+                VISIBILITY=VISIBILITY,
+                DESCRIPTION=DESCRIPTION,
+                TAGS=TAGS
+            )
+        )
+
+    # *** SAVE VIDEOS *** #
+    def save_videos(self) -> dict:
+
+        """
+        ## Save Videos
+        Function to save videos to the database.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
+        """
+
+        # Return the result of 'save_videos' method
+        return self.database.save_videos()
+
+    # *** SAVE PLAYLISTS *** #
+    def save_playlists(self) -> dict:
+
+        """
+        ## Save Playlists
+        Function to save playlists to the database.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
+        """
+
+        # Return the result of 'save_playlists' method
+        return self.database.save_playlists()
+
+    # *** DELETE VIDEO *** #
+    def delete_video(self, video_: Video) -> dict:
+
+        """
+        ## Delete Video
+        Function to delete a video.
+
+        Parameters
+        ----------
+        video_ : Video
+            Video to delete.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
+        """
+
+        # Return the result of 'delete_video' method
+        return self.database.delete_video(video_=video_)
+
+    # *** DELETE PLAYLIST *** #
+    def delete_playlist(self, playlist_: Playlist) -> dict:
+
+        """
+        ## Delete Playlist
+        Function to delete a playlist.
+
+        Parameters
+        ----------
+        playlist_ : Playlist
+            Playlist to delete.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
+        """
+
+        # Return the result of 'delete_playlist' method
+        return self.database.delete_playlist(playlist_=playlist_)
+
+    # *** REMOVE VIDEO FROM PLAYLIST *** #
+    def remove_video_from_playlist(self, video_: Video, playlist_: Playlist) -> dict:
+
+        """
+        ## Remove Video From Playlist
+        Function to remove a video from a playlist.
+
+        Parameters
+        ----------
+        video_ : Video
+            Video to remove.
+
+        playlist_ : Playlist
+            Playlist to remove the video from.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
+        """
+
+        # Return the result of 'remove_video_from_playlist' method
+        return self.database.remove_video_from_playlist(video_=video_, playlist_=playlist_)
+
+    # *** ADD VIDEO TO PLAYLIST *** #
+    def add_video_to_playlist(self, video_: Video, playlist_: Playlist) -> dict:
+
+        """
+        ## Add Video To Playlist
+        Function to add a video to a playlist.
+
+        Parameters
+        ----------
+        video_ : Video
+            Video to add.
+
+        playlist_ : Playlist
+            Playlist to add the video to.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
+        """
+
+        # Return the result of 'add_video_to_playlist' method
+        return self.database.add_video_to_playlist(video_=video_, playlist_=playlist_)
+
+    # *** UPDATE LIKES *** #
+    def update_likes(self, video_: Video, likes: int) -> dict:
+
+        """
+        ## Update Likes
+        Function to update the likes of a video.
+
+        Parameters
+        ----------
+        video_ : Video
+            Video to update.
+
+        likes : int
+            Number of likes to update.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
+        """
+
+        try:
+            # Get the index of the video
+            index: int = self.database.get_index(video_=video_)
+            # Update the likes of the video
+            self.database.videos[index].update_likes(likes=likes)
+            # Set message
+            message = {
+                "video": video_,
+                "message": "Likes updated successfully",
+                "status": 200
+            }
+
+        except Exception as error:
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {
+                "video": video_.video,
+                "message": error,
+                "status": 500
+            }
+
+        return message
+
+    # *** UPDATE VIEWS *** #
+    def update_views(self, video_: Video, views: int) -> dict:
+
+        """
+        ## Update Views
+        Function to update the views of a video.
+
+        Parameters
+        ----------
+        video_ : Video
+            Video to update.
+
+        views : int
+            Number of views to update.
+
+        Returns
+        -------
+        dict
+            A dictionary with the result of the operation.
+        """
+
+        try:
+            # Get the index of the video
+            index: int = self.database.get_index(video_=video_)
+            # Update the views of the video
+            self.database.videos[index].update_views(views=views)
+            # Set message
+            message = {
+                "video": video_,
+                "message": "Views updated successfully",
+                "status": 200
+            }
+
+        except Exception as error:
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {
+                "video": video_.video,
+                "message": error,
+                "status": 500
+            }
+
+        return message

@@ -1,6 +1,7 @@
-########################################
-#####  DOCUMENTATION               #####
-########################################
+
+#################################################*
+##### ***  DOCUMENTATION  *** ###################*
+#################################################*
 
 """
 VIDEO SERVICE
@@ -14,15 +15,21 @@ service, Video management, DataBase management,<br>
 and an integrated Search Engine.
 """
 
-########################################
-#####  IMPORTING MODULES           #####
-########################################
+#################################################*
+##### ***  IMPORTS  *** #########################*
+#################################################*
 
-#####  INTERNAL IMPORTS
+# *** Internal modules *** #
 from .__main__ import VideoService
-from .SearchEngine.search import Search
+from .video import Video
+from .playlist import Playlist
+from .__errors__ import *
 
-__version__ = "0.1.2"
+#################################################*
+##### ***  LIBRARY VARS  *** ####################*
+#################################################*
+
+__version__ = "0.2.0"
 __description__ = "A library to create video services"
 __author__ = "Dtar380"
 __license__ = "MIT"

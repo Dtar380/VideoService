@@ -46,7 +46,7 @@ def main():
         ],
         install_requires=[read("requirements.txt").splitlines()],
         extra_requires={
-            "dev": ["pytest>=8.0.0", "twine>=5.0.0"]
+            "dev": [read("requirements.dev.txt").splitlines()],
         },
         python_requires=">=3.8"
     )
