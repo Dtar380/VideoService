@@ -116,13 +116,22 @@ class Database:
             # Save the videos to the database
             with open(f"{self.DATABASE}\\{self.DATABASES[0]}", "w") as file:
                 json.dump(data, file)
+            # Set message
+            message = {
+                "message": "Videos saved successfully",
+                "status": 200
+            }
 
         except Exception as error:
-            # Parse error and set message
-            print(error_parser(error))
-            return {"message": "An error occurred while saving the videos"}
+            # Print error and return message
+            error = error_parser(error)
+            print(error)
+            message = {
+                "message": error,
+                "status": 500
+            }
 
-        return {"message": "Videos saved successfully"}
+        return message
 
     # *** SAVE PLAYLISTS *** #
     def save_playlists(self) -> dict:
@@ -142,13 +151,22 @@ class Database:
             data = [playlist.playlist for playlist in self.playlists]
             with open(f"{self.DATABASE}\\{self.DATABASES[1]}", "w") as file:
                 json.dump(data, file)
+            # Set message
+            message = {
+                "message": "Playlists saved successfully",
+                "status": 200
+            }
 
         except Exception as error:
-            # Parse error and set message
-            print(error_parser(error))
-            return {"message": "An error occurred while saving the playlists"}
+            # Print error and return message
+            error = error_parser(error)
+            print(error)
+            message = {
+                "message": error,
+                "status": 500
+            }
 
-        return {"message": "Playlists saved successfully"}
+        return message
 
     # *** ADD VIDEOS *** #
     def add_video(self, video_: Video) -> dict:
@@ -176,15 +194,23 @@ class Database:
                 # Add video to the database
                 self.videos.append(video_)
                 # Set message
-                message = {"video": video_, "message": "Video added successfully"}
+                message = {
+                    "video": video_,
+                    "message": "Video added successfully",
+                    "status": 200
+                }
             else:
-                raise AlreadyExistsError("Video already exists")
+                raise AlreadyExistsError("ERROR [DataBase]: Video already exists")
 
         except Exception as error:
             # Parse error and set message
             error = error_parser(error)
             print(error)
-            message = {"video": video_.video, "message": error}
+            message = {
+                "video": video_.video,
+                "message": error,
+                "status": 500
+            }
 
         # Save the videos to the database
         self.save_videos()
@@ -215,15 +241,23 @@ class Database:
             if playlist_.playlist not in playlist_dicts:
                 # Add playlist to the database
                 self.playlists.append(playlist_)
-                message = {"playlist": playlist_, "message": "Playlist added successfully"}
+                message = {
+                    "playlist": playlist_,
+                    "message": "Playlist added successfully",
+                    "status": 200
+                }
             else:
-                raise AlreadyExistsError("Video already exists")
+                raise AlreadyExistsError("ERROR [DataBase]: Video already exists")
 
         except Exception as error:
             # Parse error and set message
             error = error_parser(error)
             print(error)
-            message = {"playlist": playlist_.playlist, "message": error}
+            message = {
+                "playlist": playlist_.playlist,
+                "message": error,
+                "status": 500
+            }
 
         # Save the playlists to the database
         self.save_playlists()
@@ -257,7 +291,7 @@ class Database:
             # Check if files exist
             for file in files:
                 if file[0] not in os.listdir(file[1]):
-                    raise FileNotFoundError("File not found in the directory")
+                    raise FileNotFoundError("ERROR [DataBase]: File not found in the directory")
                 FileManager.delete_file(*file)
 
             # Get the video index
@@ -265,13 +299,21 @@ class Database:
             # Delete the video
             self.videos.pop(index)
             # Set message
-            message = {"video": video_, "message": "Video deleted successfully"}
+            message = {
+                "video": video_,
+                "message": "Video deleted successfully",
+                "status": 200
+            }
 
         except Exception as error:
             # Parse error and set message
             error = error_parser(error)
             print(error)
-            message = {"video": video_.video, "message": error}
+            message = {
+                "video": video_.video,
+                "message": error,
+                "status": 500
+            }
 
         # Save the videos to the database
         self.save_videos()
@@ -301,13 +343,21 @@ class Database:
             # Delete the playlist
             self.playlists.pop(index)
             # Set message
-            message = {"playlist": playlist_, "message": "Playlist deleted successfully"}
+            message = {
+                "playlist": playlist_,
+                "message": "Playlist deleted successfully",
+                "status": 200
+            }
 
         except Exception as error:
             # Parse error and set message
             error = error_parser(error)
             print(error)
-            message = {"playlist": playlist_.playlist, "message": error}
+            message = {
+                "playlist": playlist_.playlist,
+                "message": error,
+                "status": 500
+            }
 
         # Save the playlists to the database
         self.save_playlists()
@@ -340,13 +390,21 @@ class Database:
             # Add video to playlist
             self.playlists[index].add_video(video_)
             # Set message
-            message = {"playlist": playlist_, "message": "Video added to playlist successfully"}
+            message = {
+                "playlist": playlist_,
+                "message": "Video added to playlist successfully",
+                "status": 200
+            }
 
         except Exception as error:
             # Parse error and set message
             error = error_parser(error)
             print(error)
-            message = {"playlist": playlist_.playlist, "message": error}
+            message = {
+                "playlist": playlist_.playlist,
+                "message": error,
+                "status": 500
+            }
 
         # Save the playlists to the database
         self.save_playlists()
@@ -379,13 +437,21 @@ class Database:
             # Remove video from playlist
             self.playlists[index].remove_video(video_)
             # Set message
-            message = {"playlist": playlist_, "message": "Video removed from playlist successfully"}
+            message = {
+                "playlist": playlist_,
+                "message": "Video removed from playlist successfully",
+                "status": 200
+            }
 
         except Exception as error:
             # Parse error and set message
             error = error_parser(error)
             print(error)
-            message = {"playlist": playlist_.playlist, "message": error}
+            message = {
+                "playlist": playlist_.playlist,
+                "message": error,
+                "status": 500
+            }
 
         # Save the playlists to the database
         self.save_playlists()
@@ -429,7 +495,7 @@ class Database:
         if video_.video in videos:
             return videos.index(video_.video)
         else:
-            raise NotFoundError("Video not found in the database")
+            raise NotFoundError("ERROR [DataBase]: Video not found in the database")
 
     # *** GET PLAYLIST INDEX *** #
     def __get_playlist_index(self, playlist_: Playlist) -> int:
@@ -439,4 +505,4 @@ class Database:
         if playlist_.playlist in playlists:
             return playlists.index(playlist_.playlist)
         else:
-            raise NotFoundError("Playlist not found in the database")
+            raise NotFoundError("ERROR [DataBase]: Playlist not found in the database")

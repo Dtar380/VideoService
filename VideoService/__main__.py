@@ -156,8 +156,12 @@ class VideoService:
 
         except Exception as error:
             # Print error and return message
-            print(error_parser(error))
-            return {"message": "ERROR [VideoService]: Invalid input data"}
+            error = error_parser(error)
+            print(error)
+            return {
+                "message": error,
+                "status": 500
+            }
 
         # Upload the files to the server and get the result
         video_ = self.file_manager.upload_file(
@@ -226,8 +230,12 @@ class VideoService:
 
         except Exception as error:
             # Print error and return message
-            print(error_parser(error))
-            return {"message": "ERROR [VideoService]: Invalid input data"}
+            error = error_parser(error)
+            print(error)
+            return {
+                "message": error,
+                "status": 500
+            }
 
         # Return the result of 'add_playlist' method
         return self.database.add_playlist(
@@ -390,13 +398,21 @@ class VideoService:
             # Update the likes of the video
             self.database.videos[index].update_likes(likes=likes)
             # Set message
-            message = {"video": video_, "message": "Likes updated successfully"}
+            message = {
+                "video": video_,
+                "message": "Likes updated successfully",
+                "status": 200
+            }
 
         except Exception as error:
             # Parse error and set message
             error = error_parser(error)
             print(error)
-            message = {"video": video_.video, "message": error}
+            message = {
+                "video": video_.video,
+                "message": error,
+                "status": 500
+            }
 
         return message
 
@@ -427,12 +443,20 @@ class VideoService:
             # Update the views of the video
             self.database.videos[index].update_views(views=views)
             # Set message
-            message = {"video": video_, "message": "Views updated successfully"}
+            message = {
+                "video": video_,
+                "message": "Views updated successfully",
+                "status": 200
+            }
 
         except Exception as error:
             # Parse error and set message
             error = error_parser(error)
             print(error)
-            message = {"video": video_.video, "message": error}
+            message = {
+                "video": video_.video,
+                "message": error,
+                "status": 500
+            }
 
         return message

@@ -102,7 +102,10 @@ class FileManager:
         # Check if the video filename is provided
         if not video_filename:
             # Return an error message if the video filename is not provided
-            return {"message": "ERROR [FileManager]: 'VIDEO_FILENAME' is required"}
+            return {
+                "message": "ERROR [FileManager]: 'VIDEO_FILENAME' is required",
+                "status": 400
+            }
 
         # Get the next index for file naming
         index = self.__get_index()
