@@ -1,15 +1,26 @@
+
+#################################################*
+##### ***  IMPORTS  *** #########################*
+#################################################*
+
+# *** Python modules *** #
 import os
 
+# *** Internal modules *** #
 from .database import Database
 from .files_manager import FileManager
-
 from .video import Video
 from .playlist import Playlist
-
 from .__errors__ import *
 
+#################################################*
+##### ***  IMPORTS  *** #########################*
+#################################################*
+
+### *** VIDEO SERVICE CLASS *** ###
 class VideoService:
 
+    ## *** CLASS CONSTRUCTOR *** ##
     def __init__(self,
         DATABASE: str,
         VIDEOS: str,
@@ -17,29 +28,35 @@ class VideoService:
         UPLOADS: str
     ) -> None:
 
-        for value in [DATABASE, VIDEOS, THUMBNAILS, UPLOADS]:
-            if not isinstance(value, str):
-                raise TypeError("ERROR [VideoService]: All values must be of type 'str'")
-            if not os.path.exists(value):
-                raise NotFoundError(f"ERROR [VideoService]: The path '{value}' does not exist")
+        # Check if arguments are valid
+        args_handling(
+            init=True,
+            DATABASE=DATABASE,
+            VIDEOS=VIDEOS,
+            THUMBNAILS=THUMBNAILS,
+            UPLOADS=UPLOADS
+        )
 
+        # Set arguments as class attributes
         self.DB_PATH = DATABASE
         self.VIDEOS_PATH = VIDEOS
         self.THUMBNAILS_PATH = THUMBNAILS
         self.UPLOADS_PATH = UPLOADS
 
+        # Create instances of Database and FileManager
         self.database = Database(
             DATABASE=DATABASE,
             VIDEOS=VIDEOS,
             THUMBNAILS=THUMBNAILS
         )
-
         self.file_manager = FileManager(
             VIDEOS=VIDEOS,
             THUMBNAILS=THUMBNAILS,
             UPLOADS=UPLOADS
         )
 
+    ## *** CLASS METHODS *** ##
+    # *** UPLOAD VIDEO TO SERVER AND DATABASE *** #
     def upload(self,
         TITLE: str,
         VIDEO_FILENAME: str,
@@ -51,25 +68,32 @@ class VideoService:
     ) -> dict:
 
         try:
-            for value in [TITLE, VIDEO_FILENAME, OWNER, VISIBILITY, THUMBNAIL_FILENAME, DESCRIPTION]:
-                if value and not isinstance(value, str):
-                    raise TypeError("ERROR [VideoService]: All values must be of type 'str'")
-            if TAGS:
-                if not isinstance(TAGS, list):
-                    raise TypeError("ERROR [VideoService]: 'TAGS' must be of type 'list'")
-                if not all(isinstance(tag, str) for tag in TAGS):
-                    raise TypeError("ERROR [VideoService]: All values in 'TAGS' must be of type 'str'")
+            # Check if arguments are valid
+            args_handling(
+                init=False,
+                TITLE=TITLE,
+                VIDEO_FILENAME=VIDEO_FILENAME,
+                OWNER=OWNER,
+                VISIBILITY=VISIBILITY,
+                THUMBNAIL_FILENAME=THUMBNAIL_FILENAME,
+                DESCRIPTION=DESCRIPTION,
+                TAGS=TAGS
+            )
 
+            # Check if files exist
             if not os.path.isfile(os.path.join(self.UPLOADS_PATH, VIDEO_FILENAME)):
-                raise NotFoundError(f"ERROR [VideoService]: The file '{VIDEO_FILENAME}' does not exist")
+                raise FileNotFoundError(f"ERROR [VideoService]: The file '{VIDEO_FILENAME}' does not exist")
             if THUMBNAIL_FILENAME and not os.path.isfile(os.path.join(self.UPLOADS_PATH, THUMBNAIL_FILENAME)):
-                raise NotFoundError(f"ERROR [VideoService]: The file '{THUMBNAIL_FILENAME}' does not exist")
+                raise FileNotFoundError(f"ERROR [VideoService]: The file '{THUMBNAIL_FILENAME}' does not exist")
 
         except Exception as error:
+            # Print error and return message
             print(error_parser(error))
             return {"message": "ERROR [VideoService]: Invalid input data"}
 
+        # Return the result of 'add_video' method
         return self.database.add_video(
+            # Pass the result of 'upload_file' method as 'video_'
             video_ = self.file_manager.upload_file(
                 TITLE=TITLE,
                 VIDEO_FILENAME=VIDEO_FILENAME,
@@ -81,6 +105,7 @@ class VideoService:
             )
         )
 
+    # *** CREATE PLAYLIST *** #
     def create_playlist(self,
         TITLE: str,
         OWNER: str,
@@ -90,20 +115,24 @@ class VideoService:
     ) -> dict:
 
         try:
-            for value in [TITLE, OWNER, VISIBILITY, DESCRIPTION]:
-                if value and not isinstance(value, str):
-                    raise TypeError("ERROR [VideoService]: All values must be of type 'str'")
-            if TAGS:
-                if not isinstance(TAGS, list):
-                    raise TypeError("ERROR [VideoService]: 'TAGS' must be of type 'list'")
-                if not all(isinstance(tag, str) for tag in TAGS):
-                    raise TypeError("ERROR [VideoService]: All values in 'TAGS' must be of type 'str'")
+            # Check if arguments are valid
+            args_handling(
+                init=False,
+                TITLE=TITLE,
+                OWNER=OWNER,
+                VISIBILITY=VISIBILITY,
+                DESCRIPTION=DESCRIPTION,
+                TAGS=TAGS
+            )
 
         except Exception as error:
+            # Print error and return message
             print(error_parser(error))
             return {"message": "ERROR [VideoService]: Invalid input data"}
 
+        # Return the result of 'add_playlist' method
         return self.database.add_playlist(
+            # Pass the result of 'create_playlist' method as 'playlist_'
             playlist_ = Playlist(
                 TITLE=TITLE,
                 OWNER=OWNER,
@@ -113,50 +142,68 @@ class VideoService:
             )
         )
 
+    # *** SAVE VIDEOS *** #
     def save_videos(self) -> dict:
+        # Return the result of 'save_videos' method
         return self.database.save_videos()
 
+    # *** SAVE PLAYLISTS *** #
     def save_playlists(self) -> dict:
+        # Return the result of 'save_playlists' method
         return self.database.save_playlists()
 
+    # *** DELETE VIDEO *** #
     def delete_video(self, video_: Video) -> dict:
+        # Return the result of 'delete_video' method
         return self.database.delete_video(video_=video_)
 
+    # *** DELETE PLAYLIST *** #
     def delete_playlist(self, playlist_: Playlist) -> dict:
+        # Return the result of 'delete_playlist' method
         return self.database.delete_playlist(playlist_=playlist_)
 
+    # *** REMOVE VIDEO FROM PLAYLIST *** #
     def remove_video_from_playlist(self, video_: Video, playlist_: Playlist) -> dict:
+        # Return the result of 'remove_video_from_playlist' method
         return self.database.remove_video_from_playlist(video_=video_, playlist_=playlist_)
 
+    # *** ADD VIDEO TO PLAYLIST *** #
     def add_video_to_playlist(self, video_: Video, playlist_: Playlist) -> dict:
+        # Return the result of 'add_video_to_playlist' method
         return self.database.add_video_to_playlist(video_=video_, playlist_=playlist_)
 
+    # *** UPDATE LIKES *** #
     def update_likes(self, video_: Video, likes: int) -> dict:
         try:
-            videos = [video.video for video in self.database.videos]
-            if video_.video in videos:
-                index = videos.index(video_.video)
-                self.database.videos[index].update_likes(likes=likes)
-                message = {"video": video_, "message": "Likes updated successfully"}
-            else:
-                raise NotFoundError("Video not found in the database")
+            # Get the index of the video
+            index: int = self.database.get_index(video_=video_)
+            # Update the likes of the video
+            self.database.videos[index].update_likes(likes=likes)
+            # Set message
+            message = {"video": video_, "message": "Likes updated successfully"}
+
         except Exception as error:
-            print(error_parser(error))
-            message = {"video": video_, "message": "Video not found in the database"}
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {"video": video_.video, "message": error}
 
         return message
 
+    # *** UPDATE VIEWS *** #
     def update_views(self, video_: Video, views: int) -> dict:
         try:
-            videos = [video.video for video in self.database.videos]
-            if video_.video in videos:
-                index = videos.index(video_.video)
-                self.database.videos[index].update_views(views=views)
-                message = {"video": video_, "message": "Views updated successfully"}
-            else:
-                raise NotFoundError("Video not found in the database")
+            # Get the index of the video
+            index: int = self.database.get_index(video_=video_)
+            # Update the views of the video
+            self.database.videos[index].update_views(views=views)
+            # Set message
+            message = {"video": video_, "message": "Views updated successfully"}
+
         except Exception as error:
-            print(error_parser(error))
-            message = {"video": video_, "message": "Video not found in the database"}
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {"video": video_.video, "message": error}
 
         return message

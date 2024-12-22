@@ -1,6 +1,12 @@
+
+#################################################*
+##### ***  CODE  ***    #########################*
+#################################################*
+
+### *** VIDEO CLASS *** ###
 class Video:
 
-    # Constructor
+    ## *** CLASS CONSTRUCTOR *** ##
     def __init__(self,
         TITLE: str,
         VIDEO_FILENAME: str,
@@ -17,6 +23,7 @@ class Video:
         VIEWS: int = None
     ) -> None:
 
+        # Set arguments as class attributes
         self.TITLE = TITLE
         self.VIDEO_FILENAME = VIDEO_FILENAME
         self.VIDEO_FILETYPE = VIDEO_FILETYPE
@@ -26,20 +33,17 @@ class Video:
         self.LENGTH = LENGTH
         self.OWNER = OWNER
         self.VISIBILITY = VISIBILITY
-
-        self.DESCRIPTION = DESCRIPTION if DESCRIPTION else ""
-        self.TAGS = TAGS if TAGS else [""]
+        # Set optional arguments as class attributes
+        self.DESCRIPTION = DESCRIPTION or ""
+        self.TAGS = TAGS or [""]
         self.LIKES = LIKES or 0
-        self.VIEWS = VIEWS if VIEWS else 0
+        self.VIEWS = VIEWS or 0
 
-    # Method to be called when printing object
-    def __str__(self) -> str:
-        return str(self.video)
-
-    # Property that stores a dict with the key values of the video
+    ## *** CLASS PROPERTIES *** ##
+    # *** VIDEO JSON *** #
     @property
     def video(self) -> dict:
-
+        # Create a video JSON object
         video_json = {
             "TITLE": self.TITLE,
             "VIDEO_FILENAME": self.VIDEO_FILENAME,
@@ -55,8 +59,15 @@ class Video:
 
         return video_json
 
+    ## *** CLASS METHODS *** ##
+    # *** STRING REPRESENTATION *** #
+    def __str__(self) -> str:
+        return str(self.video)
+
+    # *** UPDATE LIKES *** #
     def update_likes(self, likes: int) -> None:
         self.LIKES += likes
 
+    # *** UPDATE VIEWS *** #
     def update_views(self, views: int) -> None:
         self.VIEWS += views

@@ -1,187 +1,274 @@
+
+#################################################*
+##### ***  IMPORTS  *** #########################*
+#################################################*
+
+# *** Python modules *** #
 import json
 import os
 
+# *** Internal modules *** #
 from .video import Video
 from .playlist import Playlist
 from .files_manager import FileManager
 from .__errors__ import *
 
+#################################################*
+##### ***  CODE  ***    #########################*
+#################################################*
+
+### *** DATABASE CLASS *** ###
 class Database:
 
+    ## *** CLASS ATTRIBUTES *** ##
     DATABASES = [
         "videos.json",
         "playlists.json"
     ]
 
-    # Constructor
+    ## *** CLASS CONSTRUCTOR *** ##
     def __init__(self,
         DATABASE: str = ".\\Database",
         VIDEOS: str = ".\\Database\\Videos",
         THUMBNAILS: str = ".\\Database\\THUMBNAILS"
     ) -> None:
 
+        # Set arguments as class attributes
         self.DATABASE = DATABASE
         self.VIDEOS = VIDEOS
         self.THUMBNAILS = THUMBNAILS
 
+        # Check if directories exist
         for database in self.DATABASES:
             if not os.path.exists(f"{self.DATABASE}\\{database}"):
+                # Create directories if they don't exist
                 with open(f"{self.DATABASE}\\{database}", "w") as file:
                     json.dump([], file)
 
+        # Create directories if they don't exist
         self.load_videos()
         self.load_playlists()
 
-    # Load videos and playlists from the database
+    ## *** CLASS METHODS *** ##
+    # *** LOAD VIDEOS *** #
     def load_videos(self) -> None:
+        # Load videos from the database
         with open(f"{self.DATABASE}\\{self.DATABASES[0]}", "r") as file:
             data = json.load(file)
             self.videos = [Video(**video) for video in data]
 
+    # *** LOAD PLAYLISTS *** #
     def load_playlists(self) -> None:
+        # Load playlists from the database
         with open(f"{self.DATABASE}\\{self.DATABASES[1]}", "r") as file:
             data = json.load(file)
             self.playlists = [Playlist(**playlist) for playlist in data]
 
-    # Save videos and playlists to the database
+    # *** SAVE VIDEOS *** #
     def save_videos(self) -> dict:
+
         try:
+            # Create a list of video dictionaries
             data = [video.video for video in self.videos]
+            # Save the videos to the database
             with open(f"{self.DATABASE}\\{self.DATABASES[0]}", "w") as file:
                 json.dump(data, file)
 
         except Exception as error:
+            # Parse error and set message
             print(error_parser(error))
             return {"message": "An error occurred while saving the videos"}
 
         return {"message": "Videos saved successfully"}
 
+    # *** SAVE PLAYLISTS *** #
     def save_playlists(self) -> dict:
+
         try:
+            # Create a list of playlist dictionaries
             data = [playlist.playlist for playlist in self.playlists]
             with open(f"{self.DATABASE}\\{self.DATABASES[1]}", "w") as file:
                 json.dump(data, file)
 
         except Exception as error:
+            # Parse error and set message
             print(error_parser(error))
             return {"message": "An error occurred while saving the playlists"}
 
         return {"message": "Playlists saved successfully"}
 
-    # Add and delete videos and playlists
+    # *** ADD VIDEOS *** #
     def add_video(self, video_: Video) -> dict:
+
         try:
+            # Create a list of video dictionaries
             video_dicts = [video.video for video in self.videos]
+            # Check if video already exists
             if video_.video not in video_dicts:
+                # Add video to the database
                 self.videos.append(video_)
+                # Set message
                 message = {"video": video_, "message": "Video added successfully"}
             else:
                 raise AlreadyExistsError("Video already exists")
 
         except Exception as error:
-            print(error_parser(error))
-            message = {"video": video_, "message": "Video already exists"}
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {"video": video_.video, "message": error}
 
+        # Save the videos to the database
         self.save_videos()
         return message
 
+    # *** ADD PLAYLISTS *** #
     def add_playlist(self, playlist_: Playlist) -> dict:
+
         try:
+            # Create a list of playlist dictionaries
             playlist_dicts = [playlist.playlist for playlist in self.playlists]
+            # Check if playlist already exists
             if playlist_.playlist not in playlist_dicts:
+                # Add playlist to the database
                 self.playlists.append(playlist_)
                 message = {"playlist": playlist_, "message": "Playlist added successfully"}
             else:
                 raise AlreadyExistsError("Video already exists")
 
         except Exception as error:
-            print(error_parser(error))
-            message = {"playlist": playlist_, "message": "Playlist already exists"}
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {"playlist": playlist_.playlist, "message": error}
 
+        # Save the playlists to the database
         self.save_playlists()
         return message
 
+    # *** DELETE VIDEOS *** #
     def delete_video(self, video_: Video) -> dict:
+
         try:
+            # Create a list with the video and thumbnail filenames
             files = [
                 [video_.video.get("VIDEO_FILENAME"), self.VIDEOS],
                 [video_.video.get("THUMBNAIL_FILENAME"), self.THUMBNAILS]
             ]
 
+            # Check if files exist
             for file in files:
                 if file[0] not in os.listdir(file[1]):
                     raise NotFoundError("File not found in the directory")
                 FileManager.delete_file(*file)
 
-            videos = [video.video for video in self.videos]
-            if video_.video in videos:
-                index = videos.index(video_.video)
-                self.videos.pop(index)
-                message = {"video": video_, "message": "Video deleted successfully"}
-            else:
-                raise NotFoundError("Video not found in the database")
+            # Get the video index
+            index = self.get_index(video_=video_)
+            # Delete the video
+            self.videos.pop(index)
+            # Set message
+            message = {"video": video_, "message": "Video deleted successfully"}
 
         except Exception as error:
-            print(error_parser(error))
-            message = {"video": video_, "message": "Video not found in the database"}
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {"video": video_.video, "message": error}
 
+        # Save the videos to the database
         self.save_videos()
         return message
 
+    # *** DELETE PLAYLISTS *** #
     def delete_playlist(self, playlist_: Playlist) -> dict:
+
         try:
-            playlists = [playlist.playlist for playlist in self.playlists]
-            if playlist_.playlist in playlists:
-                index = playlists.index(playlist_.playlist)
-                self.playlists.pop(index)
-                message = {"playlist": playlist_, "message": "Playlist deleted successfully"}
-            else:
-                raise NotFoundError("Playlist not found in the database")
+            # Get the playlist index
+            index = self.get_index(playlist_=playlist_)
+            # Delete the playlist
+            self.playlists.pop(index)
+            # Set message
+            message = {"playlist": playlist_, "message": "Playlist deleted successfully"}
 
         except Exception as error:
-            print(error_parser(error))
-            message = {"playlist": playlist_, "message": "Playlist not found in the database"}
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {"playlist": playlist_.playlist, "message": error}
 
+        # Save the playlists to the database
         self.save_playlists()
         return message
 
-    # Add and remove videos from playlists
+    # *** ADD VIDEO TO PLAYLIST *** #
     def add_video_to_playlist(self, playlist_: Playlist, video_: Video) -> dict:
+
         try:
-            playlists = [playlist.playlist for playlist in self.playlists]
-            if playlist_.playlist in playlists:
-                index = playlists.index(playlist_.playlist)
-                self.playlists[index].add_video(video_)
-                message = {"playlist": playlist_, "message": "Video added to playlist successfully"}
-            else:
-                raise NotFoundError("Playlist not found in the database")
+            # Get the playlist index
+            index: int = self.get_index(playlist_=playlist_)
+            # Add video to playlist
+            self.playlists[index].add_video(video_)
+            # Set message
+            message = {"playlist": playlist_, "message": "Video added to playlist successfully"}
 
         except Exception as error:
-            print(error_parser(error))
-            if "NotFoundError" in error_parser(error):
-                message = {"playlist": playlist_, "message": "Playlist not found in the database"}
-            else:
-                message = {"playlist": playlist_, "message": "Video already in playlist"}
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {"playlist": playlist_.playlist, "message": error}
 
+        # Save the playlists to the database
         self.save_playlists()
         return message
 
+    # *** REMOVE VIDEO FROM PLAYLIST *** #
     def remove_video_from_playlist(self, playlist_: Playlist, video_: Video) -> dict:
+
         try:
-            playlists = [playlist.playlist for playlist in self.playlists]
-            if playlist_.playlist in playlists:
-                index = playlists.index(playlist_.playlist)
-                self.playlists[index].remove_video(video_)
-                message = {"playlist": playlist_, "message": "Video removed from playlist successfully"}
-            else:
-                raise NotFoundError("Playlist not found in the database")
+            # Get the playlist index
+            index: int = self.get_index(playlist_=playlist_)
+            # Remove video from playlist
+            self.playlists[index].remove_video(video_)
+            # Set message
+            message = {"playlist": playlist_, "message": "Video removed from playlist successfully"}
 
         except Exception as error:
-            print(error_parser(error))
-            if "NotFoundError" in error_parser(error):
-                message = {"playlist": playlist_, "message": "Playlist not found in the database"}
-            else:
-                message = {"playlist": playlist_, "message": "Video not found in playlist"}
+            # Parse error and set message
+            error = error_parser(error)
+            print(error)
+            message = {"playlist": playlist_.playlist, "message": error}
 
+        # Save the playlists to the database
         self.save_playlists()
         return message
+
+    # *** GET INDEX *** #
+    def get_index(self, video_: Video, playlist_: Video) -> int:
+        # Check if video or playlist is provided
+        if video_:
+            # Get the video index
+            return self.__get_video_index(video_)
+        elif playlist_:
+            # Get the playlist index
+            return self.__get_playlist_index(playlist_)
+
+    ## *** PRIVATE METHODS *** ##
+    # *** GET VIDEO INDEX *** #
+    def __get_video_index(self, video_: Video) -> int:
+        # Create a list of video filenames
+        videos = [video.video for video in self.videos]
+        # Check if video exists
+        if video_.video in videos:
+            return videos.index(video_.video)
+        else:
+            raise NotFoundError("Video not found in the database")
+
+    # *** GET PLAYLIST INDEX *** #
+    def __get_playlist_index(self, playlist_: Playlist) -> int:
+        # Create a list of playlist filenames
+        playlists = [playlist.playlist for playlist in self.playlists]
+        # Check if playlist exists
+        if playlist_.playlist in playlists:
+            return playlists.index(playlist_.playlist)
+        else:
+            raise NotFoundError("Playlist not found in the database")
