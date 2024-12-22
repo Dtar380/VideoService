@@ -109,61 +109,136 @@ class FileManager:
     ## *** PRIVATE METHODS *** ##
     # *** Upload files to the database *** #
     def __upload_to_database(self, files: list) -> None:
-        # Iterate over the files
-        for file in files:
-            # Set the source and destiny paths
-            source_dist = os.path.join(self.UPLOADS, file)
-            # Set the destiny path
-            destiny_dist = os.path.join(
-                # Check if the file is a video or a thumbnail
-                self.VIDEOS if "video" in file else self.THUMBNAILS,
-                file
-            )
-            # Move the file to the destiny
-            shutil.move(source_dist, destiny_dist)
+        
+        try:
+            # Iterate over the files
+            for file in files:
+                # Set the source and destiny paths
+                source_dist = os.path.join(self.UPLOADS, file)
+                # Set the destiny path
+                destiny_dist = os.path.join(
+                    # Check if the file is a video or a thumbnail
+                    self.VIDEOS if "video" in file else self.THUMBNAILS,
+                    file
+                )
+                # Move the file to the destiny
+                shutil.move(source_dist, destiny_dist)
+
+        except Exception as error:
+            # Print the error message
+            print(error_parser(error))
 
     # *** Get the next index for file naming *** #
     def __get_index(self) -> int:
-        # Get the files in the videos directory
-        files = os.listdir(self.VIDEOS)
-        # Get the last file
-        file = files[-1]
-        # Return the next index according to file naming
-        return int(file.split("_")[1].split(".")[0]) + 1
+        # Set the index to 0
+        index: int = 0
+
+        try:
+            # Get the files in the videos directory
+            files = os.listdir(self.VIDEOS)
+            # Get the last file
+            file = files[-1]
+
+            # Get the index from the file name
+            index = int(file.split("_")[1].split(".")[0])
+            # Check if the index is valid
+            if index < 0:
+                raise ValueError("ERROR [FileManager]: Invalid index")
+
+        except Exception as error:
+            # Print the error message
+            print(error_parser(error))
+
+        return index
 
     # *** Rename the file *** #
     def __rename_file(self, file_name: str, file_type: str, index: int) -> str:
-        # Set the old destiny
-        old_dist = os.path.join(self.UPLOADS, file_name)
-        # Set the new name
-        new_name = f"{file_type}_{index}.{file_name.split('.')[1]}"
-        # Set the new destiny
-        new_dist = os.path.join(self.UPLOADS, new_name)
-        # Rename the file
-        os.rename(old_dist, new_dist)
+        # Set the new name to None
+        new_name: str = ""
+
+        try:
+            # Set the paths
+            old_dist = os.path.join(self.UPLOADS, file_name) # Set the old path
+            new_name = f"{file_type}_{index}.{file_name.split('.')[1]}" # Set the new name
+            new_dist = os.path.join(self.UPLOADS, new_name) # Set the new path
+
+            # Rename the file
+            os.rename(old_dist, new_dist)
+
+        except Exception as error:
+            # Print the error message
+            print(error_parser(error))
 
         return new_name
 
     # *** Create a thumbnail *** #
     def __create_thumbnail(self, file_name: str, index: int) -> str:
-        # Get the video path
-        video = os.path.join(self.UPLOADS, file_name)
-        # Read the video
-        vidObj = cv2.VideoCapture(video) # Create a video object
-        success, image = vidObj.read() # Read the first frame
-        # Create the thumbnail
-        new_name = f"miniature_{index}.jpg" # Create the file name
-        cv2.imwrite(os.path.join(self.THUMBNAILS, new_name), image) # Save the thumbnail
+        # Set the new name to None
+        new_name: str = ""
+
+        try:
+            # Open the video
+            video = os.path.join(self.UPLOADS, file_name)
+            videoObj = cv2.VideoCapture(video) # Create a video object
+
+            # Check if the video is opened
+            if not videoObj.isOpened():
+                raise FileNotFoundError("ERROR [FileManager]: Video not found")
+
+            # Get the frame located in the end of the first 10% of the video
+            length = videoObj.get(cv2.CAP_PROP_FRAME_COUNT)
+            if length == 0:
+                raise ValueError("ERROR [FileManager]: Video has no frames")
+            frame = length // 10 + 1
+            videoObj.set(cv2.CAP_PROP_POS_FRAMES, frame)
+            success, image = videoObj.read()
+
+            # Check if the frame was found
+            if not success or image is None:
+                raise RuntimeError("ERROR [FileManager]: Frame not found")
+
+            # Create the thumbnail
+            new_name = f"miniature_{index}.jpg" # Set the new name
+            thumbnail_path = os.path.join(self.THUMBNAILS, new_name) # Set the thumbnail path
+            cv2.imwrite(thumbnail_path, image) # Save the thumbnail
+
+        except Exception as error:
+            # Print the error message
+            print(error_parser(error))
+
+        finally:
+            # Release the video object
+            if 'videoObj' in locals() and videoObj.isOpened():
+                videoObj.release()
 
         return new_name
 
     # *** Get the video length *** #
     def __get_length(self, file_name: str) -> int:
-        # Get the video path
-        video = os.path.join(self.VIDEOS, file_name)
-        # Read the video
-        videoObj = cv2.VideoCapture(video) # Create a video object
-        # Calculate the video duration in seconds using frames and fps
-        duration = videoObj.get(cv2.CAP_PROP_FRAME_COUNT) // videoObj.get(cv2.CAP_PROP_FPS)
+        # Set the duration to 0
+        duration: int = 0
+
+        try:
+            # Open the video
+            video = os.path.join(self.VIDEOS, file_name)
+            videoObj = cv2.VideoCapture(video) # Create a video object
+
+            # Check if the video is opened
+            if not videoObj.isOpened():
+                raise FileNotFoundError("ERROR [FileManager]: Video not found")
+
+            # Calculate the video duration in seconds using frames and fps
+            length = videoObj.get(cv2.CAP_PROP_FRAME_COUNT) # Get the number of frames
+            fps = videoObj.get(cv2.CAP_PROP_FPS) # Get the frames per second
+            duration = length // fps # Calculate the duration
+
+        except Exception as error:
+            # Print the error message
+            print(error_parser(error))
+
+        finally:
+            # Release the video object
+            if 'videoObj' in locals() and videoObj.isOpened():
+                videoObj.release()
 
         return duration

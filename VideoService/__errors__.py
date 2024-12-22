@@ -34,9 +34,12 @@ def error_parser(error: str) -> str:
     # Check if error uses ' or "
     if "('" in error:
         error_str = error.replace("('", ": ").replace("')", "") # Replace ' with :
-    else:
+    elif "(\"" in error:
         error_str = error.replace("(\"", ": ").replace("\")", "") # Replace " with :
-    return error_str # Return the error string
+    else:
+        error_str = error # Return the error
+
+    return error_str
 
 ## *** ARGS HANDLING *** ##
 def args_handling(init: bool, **kwargs):
