@@ -14,6 +14,12 @@ from .__errors__ import *
 ### *** PLAYLIST CLASS *** ###
 class Playlist:
 
+    """
+    Playlist
+    --------
+    A class to represent a playlist object.
+    """
+
     ## *** CLASS CONSTRUCTOR *** ##
     def __init__(self,
         TITLE: str,
@@ -23,6 +29,30 @@ class Playlist:
         TAGS: list[str] = None,
         VIDEOS: list[dict] = None
     ) -> None:
+
+        """
+        ## Class Constructor
+
+        Parameters
+        ----------
+        TITLE : str
+            The title of the playlist.
+
+        OWNER : str
+            The owner of the playlist.
+
+        VISIBILITY : str
+            The visibility of the playlist.
+
+        DESCRIPTION : str, optional
+            The description of the playlist.
+
+        TAGS : list[str], optional
+            The tags of the playlist.
+
+        VIDEOS : list[dict], optional
+            The videos of the playlist.
+        """
 
         # Set arguments as class attributes
         self.TITLE = TITLE
@@ -38,6 +68,17 @@ class Playlist:
     # *** PLAYLIST JSON *** #
     @property
     def playlist(self) -> dict:
+
+        """
+        ## Playlist JSON
+        Get a JSON object representing the playlist.
+
+        Returns
+        -------
+        dict
+            A JSON object representing the playlist.
+        """
+
         # Create a playlist JSON object
         playlist_json = {
             "TITLE": self.TITLE,
@@ -58,6 +99,16 @@ class Playlist:
     # *** ADD VIDEO *** #
     def add_video(self, video_: Video) -> None:
 
+        """
+        ## Add Video
+        Add a video to the playlist.
+
+        Parameters
+        ----------
+        video_ : Video
+            The video to add to the playlist.
+        """
+
         try:
             # Check if the video already exists in the playlist
             if self.__video_exists(video_):
@@ -72,6 +123,16 @@ class Playlist:
 
     # *** REMOVE VIDEO *** #
     def remove_video(self, video_: Video) -> None:
+
+        """
+        ## Remove Video
+        Remove a video from the playlist.
+
+        Parameters
+        ----------
+        video_ : Video
+            The video to remove from the playlist.
+        """
 
         try:
             # Check if the video exists in the playlist

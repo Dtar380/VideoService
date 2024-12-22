@@ -6,6 +6,12 @@
 ### *** VIDEO CLASS *** ###
 class Video:
 
+    """
+    Video
+    -----
+    A class to represent a video.
+    """
+
     ## *** CLASS CONSTRUCTOR *** ##
     def __init__(self,
         TITLE: str,
@@ -22,6 +28,51 @@ class Video:
         LIKES: int = None,
         VIEWS: int = None
     ) -> None:
+
+        """
+        ## Class Constructor
+
+        Parameters
+        ----------
+        TITLE : str
+            The title of the video.
+
+        VIDEO_FILENAME : str
+            The filename of the video.
+
+        VIDEO_FILETYPE : str
+            The filetype of the video.
+
+        THUMBNAIL_FILENAME : str
+            The filename of the thumbnail.
+
+        THUMBNAIL_FILETYPE : str
+            The filetype of the thumbnail.
+
+        UPLOAD_DATE : str
+            The upload date of the video.
+
+        OWNER : str
+            The owner of the video.
+
+        VISIBILITY : str
+            The visibility of the video.
+
+        LENGTH : int
+            The length of the video.
+
+        DESCRIPTION : str, optional
+            The description of the video.
+
+        TAGS : list[str], optional
+            The tags of the video.
+
+        LIKES : int, optional
+            The likes of the video.
+
+        VIEWS : int, optional
+            The views of the video.
+        """
 
         # Set arguments as class attributes
         self.TITLE = TITLE
@@ -43,6 +94,17 @@ class Video:
     # *** VIDEO JSON *** #
     @property
     def video(self) -> dict:
+
+        """
+        ## Video JSON
+        Get a JSON object representing the video.
+
+        Returns
+        -------
+        dict
+            A JSON object representing the video.
+        """
+
         # Create a video JSON object
         video_json = {
             "TITLE": self.TITLE,
@@ -66,8 +128,30 @@ class Video:
 
     # *** UPDATE LIKES *** #
     def update_likes(self, likes: int) -> None:
+
+        """
+        ## Update Likes
+        Update the likes of the video.
+
+        Parameters
+        ----------
+        likes : int
+            The number of likes to add to the video.
+        """
+
         self.LIKES += likes
 
     # *** UPDATE VIEWS *** #
     def update_views(self, views: int) -> None:
+
+        """
+        ## Update Views
+        Update the views of the video.
+
+        Parameters
+        ----------
+        views : int
+            The number of views to add to the video.
+        """
+
         self.VIEWS += views

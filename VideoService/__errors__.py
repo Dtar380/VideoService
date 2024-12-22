@@ -14,20 +14,56 @@ import os
 ## *** NOT FOUND ERROR *** ##
 class NotFoundError(Exception):
 
-    def __init__(self, message):
+    """
+    ## NotFoundError
+    Exception raised when a resource is not found.
+
+    Parameters
+    ----------
+    message : str
+        Error message.
+    """
+
+    def __init__(self, message: str):
         self.message = message
         super().__init__(self.message)
 
 ## *** ALREADY EXISTS ERROR *** ##
 class AlreadyExistsError(Exception):
 
-    def __init__(self, message):
+    """
+    ## AlreadyExistsError
+    Exception raised when a resource already exists.
+
+    Parameters
+    ----------
+    message : str
+        Error message.
+    """
+
+    def __init__(self, message: str):
         self.message = message
         super().__init__(self.message)
 
 ### *** FUNCTIONS *** ###
 ## *** ERROR PARSER *** ##
 def error_parser(error: str) -> str:
+
+    """
+    ## Error Parser
+    Function to parse an error message.
+
+    Parameters
+    ----------
+    error : str
+        Error message.
+
+    Returns
+    -------
+    error_str : str
+        Parsed error message.
+    """
+
     # Convert the error to a string
     error = repr(error)
 
@@ -43,6 +79,32 @@ def error_parser(error: str) -> str:
 
 ## *** ARGS HANDLING *** ##
 def args_handling(init: bool, **kwargs):
+
+    """
+    ## Args Handling
+    Function to handle the arguments.
+
+    Parameters
+    ----------
+    init : bool
+        If the function is called from the __init__ method.
+
+    **kwargs : dict
+        Keyword arguments.
+
+    Raises
+    ------
+    TypeError
+        If all values are not of type `str`.
+
+        If `TAGS` is not of type `list`.
+
+        If all values in `TAGS` are not of type `str`.
+
+    NotFoundError
+        If the folder does not exist.
+    """
+
     # Values without TAGS
     values = [value[1] for value in kwargs.items() if value[0] != "TAGS"]
 

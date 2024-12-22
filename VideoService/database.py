@@ -20,6 +20,12 @@ from .__errors__ import *
 ### *** DATABASE CLASS *** ###
 class Database:
 
+    """
+    Database
+    --------
+    The Database class is used to manage the videos and playlists databases.
+    """
+
     ## *** CLASS ATTRIBUTES *** ##
     DATABASES = [
         "videos.json",
@@ -32,6 +38,21 @@ class Database:
         VIDEOS: str = ".\\Database\\Videos",
         THUMBNAILS: str = ".\\Database\\THUMBNAILS"
     ) -> None:
+
+        """
+        ## Class Constructor
+
+        Parameters
+        ----------
+        DATABASE : str, optional
+            The path to the database directory.
+
+        VIDEOS : str, optional
+            The path to the videos directory.
+
+        THUMBNAILS : str, optional
+            The path to the thumbnails directory.
+        """
 
         # Set arguments as class attributes
         self.DATABASE = DATABASE
@@ -52,6 +73,12 @@ class Database:
     ## *** CLASS METHODS *** ##
     # *** LOAD VIDEOS *** #
     def load_videos(self) -> None:
+
+        """
+        ## Load Videos
+        The load_videos method is used to load the videos from the database.
+        """
+
         # Load videos from the database
         with open(f"{self.DATABASE}\\{self.DATABASES[0]}", "r") as file:
             data = json.load(file)
@@ -59,6 +86,12 @@ class Database:
 
     # *** LOAD PLAYLISTS *** #
     def load_playlists(self) -> None:
+
+        """
+        ## Load Playlists
+        The load_playlists method is used to load the playlists from the database.
+        """
+
         # Load playlists from the database
         with open(f"{self.DATABASE}\\{self.DATABASES[1]}", "r") as file:
             data = json.load(file)
@@ -66,6 +99,16 @@ class Database:
 
     # *** SAVE VIDEOS *** #
     def save_videos(self) -> dict:
+
+        """
+        ## Save Videos
+        The save_videos method is used to save the videos to the database.
+
+        Returns
+        -------
+        dict
+            A dictionary containing a message
+        """
 
         try:
             # Create a list of video dictionaries
@@ -84,6 +127,16 @@ class Database:
     # *** SAVE PLAYLISTS *** #
     def save_playlists(self) -> dict:
 
+        """
+        ## Save Playlists
+        The save_playlists method is used to save the playlists to the database.
+
+        Returns
+        -------
+        dict
+            A dictionary containing a message.
+        """
+
         try:
             # Create a list of playlist dictionaries
             data = [playlist.playlist for playlist in self.playlists]
@@ -99,6 +152,21 @@ class Database:
 
     # *** ADD VIDEOS *** #
     def add_video(self, video_: Video) -> dict:
+
+        """
+        ## Add Video
+        The add_video method is used to add a video to the database.
+
+        Parameters
+        ----------
+        video_ : Video
+            The video object to be added to the database.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the video object and a message.
+        """
 
         try:
             # Create a list of video dictionaries
@@ -125,6 +193,21 @@ class Database:
     # *** ADD PLAYLISTS *** #
     def add_playlist(self, playlist_: Playlist) -> dict:
 
+        """
+        ## Add Playlist
+        The add_playlist method is used to add a playlist to the database.
+
+        Parameters
+        ----------
+        playlist_ : Playlist
+            The playlist object to be added to the database.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the playlist object and a message.
+        """
+
         try:
             # Create a list of playlist dictionaries
             playlist_dicts = [playlist.playlist for playlist in self.playlists]
@@ -149,6 +232,21 @@ class Database:
     # *** DELETE VIDEOS *** #
     def delete_video(self, video_: Video) -> dict:
 
+        """
+        ## Delete Video
+        The delete_video method is used to delete a video from the database.
+
+        Parameters
+        ----------
+        video_ : Video
+            The video object to be deleted from the database.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the video object and a message.
+        """
+
         try:
             # Create a list with the video and thumbnail filenames
             files = [
@@ -159,7 +257,7 @@ class Database:
             # Check if files exist
             for file in files:
                 if file[0] not in os.listdir(file[1]):
-                    raise NotFoundError("File not found in the directory")
+                    raise FileNotFoundError("File not found in the directory")
                 FileManager.delete_file(*file)
 
             # Get the video index
@@ -182,6 +280,21 @@ class Database:
     # *** DELETE PLAYLISTS *** #
     def delete_playlist(self, playlist_: Playlist) -> dict:
 
+        """
+        ## Delete Playlist
+        The delete_playlist method is used to delete a playlist from the database.
+
+        Parameters
+        ----------
+        playlist_ : Playlist
+            The playlist object to be deleted from the database.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the playlist object and a message
+        """
+
         try:
             # Get the playlist index
             index = self.get_index(playlist_=playlist_)
@@ -202,6 +315,24 @@ class Database:
 
     # *** ADD VIDEO TO PLAYLIST *** #
     def add_video_to_playlist(self, playlist_: Playlist, video_: Video) -> dict:
+
+        """
+        ## Add Video to Playlist
+        The add_video_to_playlist method is used to add a video to a playlist.
+
+        Parameters
+        ----------
+        playlist_ : Playlist
+            The playlist object to add the video to.
+
+        video_ : Video
+            The video object to be added to the playlist.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the playlist object and a message.
+        """
 
         try:
             # Get the playlist index
@@ -224,6 +355,24 @@ class Database:
     # *** REMOVE VIDEO FROM PLAYLIST *** #
     def remove_video_from_playlist(self, playlist_: Playlist, video_: Video) -> dict:
 
+        """
+        ## Remove Video from Playlist
+        The remove_video_from_playlist method is used to remove a video from a playlist.
+
+        Parameters
+        ----------
+        playlist_ : Playlist
+            The playlist object to remove the video from.
+
+        video_ : Video
+            The video object to be removed from the playlist.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the playlist object and a message.
+        """
+
         try:
             # Get the playlist index
             index: int = self.get_index(playlist_=playlist_)
@@ -244,6 +393,25 @@ class Database:
 
     # *** GET INDEX *** #
     def get_index(self, video_: Video, playlist_: Video) -> int:
+
+        """
+        ## Get Index
+        The get_index method is used to get the index of a video or playlist.
+
+        Parameters
+        ----------
+        video_ : Video
+            The video object to get the index of.
+
+        playlist_ : Playlist
+            The playlist object to get the index of.
+
+        Returns
+        -------
+        int
+            The index of the video or playlist.
+        """
+
         # Check if video or playlist is provided
         if video_:
             # Get the video index

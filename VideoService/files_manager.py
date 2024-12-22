@@ -22,12 +22,33 @@ from .__errors__ import error_parser
 ### *** FILE MANAGER CLASS *** ###
 class FileManager:
 
+    """
+    FileManager
+    -----------
+    Manages video and thumbnail files on a server and database.
+    """
+
     ## *** CLASS CONSTRUCTOR *** ##
     def __init__(self,
         UPLOADS: str = ".\\Uploads",
         VIDEOS: str = ".\\Database\\Videos",
         THUMBNAILS: str = ".\\Database\\THUMBNAILS"
     ) -> None:
+
+        """
+        ## Class Constructor
+
+        Parameters
+        ----------
+        UPLOADS : str, optional
+            The path to the directory where the uploaded files are stored.
+
+        VIDEOS : str, optional
+            The path to the directory where the video files are stored.
+
+        THUMBNAILS : str, optional
+            The path to the directory where the thumbnail files are stored.
+        """
 
         # Set arguments as class attributes
         self.UPLOADS = UPLOADS
@@ -37,6 +58,43 @@ class FileManager:
     ## *** CLASS METHODS *** ##
     # *** UPLOAD FILE TO SERVER AND DATABASE *** #
     def upload_file(self, **kwargs) -> Video | dict:
+
+        """
+        ## Upload File
+        Uploads a video and thumbnail files to the server and database.
+
+        Parameters
+        ----------
+        VIDEO_FILENAME : str
+            The name of the video file.
+
+        THUMBNAIL_FILENAME : str, optional
+            The name of the thumbnail file.
+
+        TITLE : str
+            The title of the video.
+
+        OWNER : str
+            The username of the video owner.
+
+        VISIBILITY : str
+            The visibility of the video.
+
+        DESCRIPTION : str, optional
+            The description of the video.
+
+        TAGS : list, optional
+            The tags of the video.
+
+        Returns
+        -------
+        Video
+            The video object if the files are uploaded successfully.
+
+        dict
+            A dictionary with an error message if the files are not uploaded.
+        """
+
         # Get the video and thumbnail filenames
         video_filename = kwargs.get("VIDEO_FILENAME") or None
         thumbnail_filename = kwargs.get("THUMBNAIL_FILENAME") or None
@@ -96,6 +154,19 @@ class FileManager:
     @staticmethod
     def delete_file(file_name: str, directory: str) -> None:
 
+        """
+        ## Delete File
+        Deletes a file from the server and database.
+
+        Parameters
+        ----------
+        file_name : str
+            The name of the file to delete.
+
+        directory : str
+            The directory where the file is stored.
+        """
+
         try:
             # Get the file path
             file = os.path.join(directory, file_name)
@@ -109,7 +180,7 @@ class FileManager:
     ## *** PRIVATE METHODS *** ##
     # *** Upload files to the database *** #
     def __upload_to_database(self, files: list) -> None:
-        
+
         try:
             # Iterate over the files
             for file in files:
