@@ -1,0 +1,4 @@
+pytest>=8.3.4
+twine>=6.0.1
+setuptools>=75.3.0
+wheel>=0.45.1

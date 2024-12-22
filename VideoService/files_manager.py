@@ -3,6 +3,9 @@
 ##### ***  IMPORTS  *** #########################*
 #################################################*
 
+# *** External modules *** #
+import cv2
+
 # *** Python modules *** #
 import shutil
 import os
@@ -145,10 +148,22 @@ class FileManager:
     def __create_thumbnail(self, file_name: str, index: int) -> str:
         # Get the video path
         video = os.path.join(self.UPLOADS, file_name)
-        # TODO: Add CV2 logic for creating thumbnails
+        # Read the video
+        vidObj = cv2.VideoCapture(video) # Create a video object
+        success, image = vidObj.read() # Read the first frame
+        # Create the thumbnail
+        new_name = f"miniature_{index}.jpg" # Create the file name
+        cv2.imwrite(os.path.join(self.THUMBNAILS, new_name), image) # Save the thumbnail
+
+        return new_name
 
     # *** Get the video length *** #
     def __get_length(self, file_name: str) -> int:
         # Get the video path
         video = os.path.join(self.VIDEOS, file_name)
-        # TODO: Add CV2 logic for getting video length
+        # Read the video
+        videoObj = cv2.VideoCapture(video) # Create a video object
+        # Calculate the video duration in seconds using frames and fps
+        duration = videoObj.get(cv2.CAP_PROP_FRAME_COUNT) // videoObj.get(cv2.CAP_PROP_FPS)
+
+        return duration
