@@ -47,9 +47,9 @@ Im currently documenting the project and solving all [known issues](#open_file_f
 | VERSION | INCLUDES                          |
 |---------|-----------------------------------|
 |  0.3.0  | Include more safety measurements  |
-|  0.4.0  | Include optimization              |
-|  0.5.0  | Code Review and Refactoring       |
-|  1.0.0  | First Release Version             |
+|  0.4.0  | Function adaptability             |
+|  0.5.0  | Include optimization              |
+|  1.0.0  | First Release Version (refactor)  |
 
 ### On consideration
 Right now we have three main things in consideration for future updates for this Application, which are:

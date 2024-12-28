@@ -136,6 +136,11 @@ class VideoService:
         """
 
         try:
+            # Set optional arguments as empty strings or lists
+            THUMBNAIL_FILENAME = THUMBNAIL_FILENAME or ""
+            DESCRIPTION = DESCRIPTION or ""
+            TAGS = TAGS or [""]
+
             # Check if arguments are valid
             args_handling(
                 init=False,
@@ -218,6 +223,10 @@ class VideoService:
         """
 
         try:
+            # Set optional arguments as empty strings or lists
+            DESCRIPTION = DESCRIPTION or ""
+            TAGS = TAGS or [""]
+
             # Check if arguments are valid
             args_handling(
                 init=False,

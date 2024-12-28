@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "VideoService"
+version = "0.1.0"
+description = "A library to create video services"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{name = "Dtar380"}]
+license = { file = "LICENSE" }
+keywords = []
+classifiers = [
+    "Development Status :: 4 - Beta",
+
+    "Intended Audience :: Developers",
+
+    "Topic :: Database :: Database Engines/Servers",
+    "Topic :: Office/Business",
+    "Topic :: Multimedia :: Video",
+
+    "Operating System :: OS Independent",
+
+    "License :: OSI Approved :: MIT License",
+
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+dependencies = [
+    "opencv-python==4.10.0.84"
+]
+
+[project.urls]
+homepage = "https://github.com/Dtar380/VideoService"
+documentation = "https://readthedocs.org/projects/videoservice/"
+repository = "https://github.com/Dtar380/VideoService"
+"Bug Tracker" = "https://github.com/Dtar380/VideoService/issues"
+changelog = "https://github.com/Dtar380/Videoservice/releases"
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "twine",
+    "setuptools",
+    "wheel",
+]
+test = [
+    "pytest",
+    "build",
+    "twine",
+    "setuptools",
+    "wheel",
+]
+
+[tool.setuptools.packages.find]
+include = ["VideoService"]
+exclude = ["tests"]
