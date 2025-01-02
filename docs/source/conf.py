@@ -4,15 +4,17 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'WorkSpace Automation'
+project = 'VideoService'
 copyright = '2024, Dtar380'
 author = 'Dtar380'
-version = '0.1.1'
+version = '0.2.0'
 
 # -- General configuration ---------------------------------------------------
 
 extensions = [
-    "myst_parser"
+    "myst_parser",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
 ]
 
 templates_path = [
@@ -23,6 +25,11 @@ exclude_patterns = [
     'Thumbs.db',
     '.DS_Store'
 ]
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
 
 # -- Options for HTML output -------------------------------------------------
 

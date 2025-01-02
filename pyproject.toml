@@ -37,10 +37,10 @@ dependencies = [
 
 [project.urls]
 homepage = "https://github.com/Dtar380/VideoService"
-documentation = "https://readthedocs.org/projects/videoservice/"
+documentation = "https://videoservice.readthedocs.io"
 repository = "https://github.com/Dtar380/VideoService"
 "Bug Tracker" = "https://github.com/Dtar380/VideoService/issues"
-changelog = "https://github.com/Dtar380/Videoservice/releases"
+changelog = "https://github.com/Dtar380/VideoService/releases"
 
 [project.optional-dependencies]
 dev = [
