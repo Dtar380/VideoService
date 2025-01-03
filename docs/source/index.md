@@ -12,7 +12,7 @@ GettingStarted/setup.md
 :caption: Documentation
 :hidden:
 
-Documentation/modules.rst
+Documentation/modules.md
 ```
 
 ```{toctree}

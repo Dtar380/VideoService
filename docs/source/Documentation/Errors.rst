@@ -1,6 +1,6 @@
-VideoService
+Errors
 ============
-.. autoclass:: VideoService.__main__.VideoService
+.. automodule:: VideoService.__errors__
    :members:
    :undoc-members:
    :show-inheritance:

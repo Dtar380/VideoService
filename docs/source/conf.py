@@ -26,10 +26,7 @@ exclude_patterns = [
     '.DS_Store'
 ]
 
-source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
-}
+source_suffix = [".rst", ".md"]
 
 # -- Options for HTML output -------------------------------------------------
 
