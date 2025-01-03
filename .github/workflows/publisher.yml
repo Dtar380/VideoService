@@ -3,6 +3,7 @@ name: Upload to Pypi when release is created
 on:
   release:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   publisher:
