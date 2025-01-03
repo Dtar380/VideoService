@@ -7,7 +7,7 @@ version: 2
 
 # Set the OS, Python version and other tools you might need
 build:
-  os: latest
+  os: ubuntu-latest
 
 python:
   version: 3.12
