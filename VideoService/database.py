@@ -22,7 +22,7 @@ class Database:
 
     """
     Database
-    --------
+    ========
     The Database class is used to manage the videos and playlists databases.
     """
 
@@ -40,7 +40,8 @@ class Database:
     ) -> None:
 
         """
-        ## Class Constructor
+        Class Constructor
+        =================
 
         Parameters
         ----------
@@ -75,7 +76,8 @@ class Database:
     def load_videos(self) -> None:
 
         """
-        ## Load Videos
+        Load Videos
+        ===========
         The load_videos method is used to load the videos from the database.
         """
 
@@ -88,7 +90,8 @@ class Database:
     def load_playlists(self) -> None:
 
         """
-        ## Load Playlists
+        Load Playlists
+        ==============
         The load_playlists method is used to load the playlists from the database.
         """
 
@@ -101,7 +104,8 @@ class Database:
     def save_videos(self) -> dict:
 
         """
-        ## Save Videos
+        Save Videos
+        ===========
         The save_videos method is used to save the videos to the database.
 
         Returns
@@ -137,7 +141,8 @@ class Database:
     def save_playlists(self) -> dict:
 
         """
-        ## Save Playlists
+        Save Playlists
+        ==============
         The save_playlists method is used to save the playlists to the database.
 
         Returns
@@ -172,7 +177,8 @@ class Database:
     def add_video(self, video_: Video) -> dict:
 
         """
-        ## Add Video
+        Add Video
+        =========
         The add_video method is used to add a video to the database.
 
         Parameters
@@ -220,7 +226,8 @@ class Database:
     def add_playlist(self, playlist_: Playlist) -> dict:
 
         """
-        ## Add Playlist
+        Add Playlist
+        ============
         The add_playlist method is used to add a playlist to the database.
 
         Parameters
@@ -267,7 +274,8 @@ class Database:
     def delete_video(self, video_: Video) -> dict:
 
         """
-        ## Delete Video
+        Delete Video
+        ============
         The delete_video method is used to delete a video from the database.
 
         Parameters
@@ -323,7 +331,8 @@ class Database:
     def delete_playlist(self, playlist_: Playlist) -> dict:
 
         """
-        ## Delete Playlist
+        Delete Playlist
+        ===============
         The delete_playlist method is used to delete a playlist from the database.
 
         Parameters
@@ -367,7 +376,8 @@ class Database:
     def add_video_to_playlist(self, playlist_: Playlist, video_: Video) -> dict:
 
         """
-        ## Add Video to Playlist
+        Add Video to Playlist
+        =====================
         The add_video_to_playlist method is used to add a video to a playlist.
 
         Parameters
@@ -414,7 +424,8 @@ class Database:
     def remove_video_from_playlist(self, playlist_: Playlist, video_: Video) -> dict:
 
         """
-        ## Remove Video from Playlist
+        Remove Video from Playlist
+        ==========================
         The remove_video_from_playlist method is used to remove a video from a playlist.
 
         Parameters
@@ -461,7 +472,8 @@ class Database:
     def get_index(self, video_: Video, playlist_: Video) -> int:
 
         """
-        ## Get Index
+        Get Index
+        =========
         The get_index method is used to get the index of a video or playlist.
 
         Parameters

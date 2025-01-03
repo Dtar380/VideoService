@@ -22,8 +22,11 @@ For building from source you need to follow the next steps:
 - First go to release page and select the version. [Here](https://github.com/Dtar380/VideoService/release)
 - Then download the `source.zip` file and unzip the file on a custom directory.
 - Now make sure you're running a supported python version. (3.8 onwards)
-- After that, run `pip install -r requirements.txt`.
-- At last run `python -m pip install -e`.
+- At last run `python -m pip install -e .[doc]`.
+
+```{note}
+You can select extra versions of the package so that it installs extra dependencies, such as -e .[dev]
+```
 
 ```{warning}
 Do not errase the code from the source folder as the python package is running from that source code.

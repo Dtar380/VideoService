@@ -16,7 +16,7 @@ class Playlist:
 
     """
     Playlist
-    --------
+    ========
     A class to represent a playlist object.
     """
 
@@ -31,7 +31,8 @@ class Playlist:
     ) -> None:
 
         """
-        ## Class Constructor
+        Class Constructor
+        =================
 
         Parameters
         ----------
@@ -70,7 +71,8 @@ class Playlist:
     def playlist(self) -> dict:
 
         """
-        ## Playlist JSON
+        Playlist JSON
+        =============
         Get a JSON object representing the playlist.
 
         Returns
@@ -100,7 +102,8 @@ class Playlist:
     def add_video(self, video_: Video) -> None:
 
         """
-        ## Add Video
+        Add Video
+        =========
         Add a video to the playlist.
 
         Parameters
@@ -125,7 +128,8 @@ class Playlist:
     def remove_video(self, video_: Video) -> None:
 
         """
-        ## Remove Video
+        Remove Video
+        ============
         Remove a video from the playlist.
 
         Parameters

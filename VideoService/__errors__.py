@@ -15,7 +15,8 @@ import os
 class NotFoundError(Exception):
 
     """
-    ## NotFoundError
+    NotFoundError
+    =============
     Exception raised when a resource is not found.
 
     Parameters
@@ -32,7 +33,8 @@ class NotFoundError(Exception):
 class AlreadyExistsError(Exception):
 
     """
-    ## AlreadyExistsError
+    AlreadyExistsError
+    ==================
     Exception raised when a resource already exists.
 
     Parameters
@@ -50,7 +52,8 @@ class AlreadyExistsError(Exception):
 def error_parser(error: str) -> str:
 
     """
-    ## Error Parser
+    Error Parser
+    ============
     Function to parse an error message.
 
     Parameters
@@ -81,7 +84,8 @@ def error_parser(error: str) -> str:
 def args_handling(init: bool, **kwargs):
 
     """
-    ## Args Handling
+    Args Handling
+    =============
     Function to handle the arguments.
 
     Parameters

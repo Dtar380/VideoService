@@ -22,8 +22,8 @@ class VideoService:
 
     """
     VideoService
-    ------------
-    Main class of Video Service library (and the only class you'll need 😉).
+    ============
+    Main class of Video Service library.
 
     This class will manage all the backend of the service, and you will just
     need to call it's methods when required by the server.
@@ -38,7 +38,8 @@ class VideoService:
     ) -> None:
 
         """
-        ## Class Constructor
+        Class Constructor
+        =================
 
         Parameters
         ----------
@@ -103,7 +104,8 @@ class VideoService:
     ) -> dict:
 
         """
-        ## Upload
+        Upload
+        ======
         Function to upload a video to the server and database.
 
         Parameters
@@ -196,7 +198,8 @@ class VideoService:
     ) -> dict:
 
         """
-        ## Create Playlist
+        Create Playlist
+        ===============
         Function to create a playlist.
 
         Parameters
@@ -262,7 +265,8 @@ class VideoService:
     def save_videos(self) -> dict:
 
         """
-        ## Save Videos
+        Save Videos
+        ===========
         Function to save videos to the database.
 
         Returns
@@ -278,7 +282,8 @@ class VideoService:
     def save_playlists(self) -> dict:
 
         """
-        ## Save Playlists
+        Save Playlists
+        ==============
         Function to save playlists to the database.
 
         Returns
@@ -294,7 +299,8 @@ class VideoService:
     def delete_video(self, video_: Video) -> dict:
 
         """
-        ## Delete Video
+        Delete Video
+        ============
         Function to delete a video.
 
         Parameters
@@ -315,7 +321,8 @@ class VideoService:
     def delete_playlist(self, playlist_: Playlist) -> dict:
 
         """
-        ## Delete Playlist
+        Delete Playlist
+        ===============
         Function to delete a playlist.
 
         Parameters
@@ -336,7 +343,8 @@ class VideoService:
     def remove_video_from_playlist(self, video_: Video, playlist_: Playlist) -> dict:
 
         """
-        ## Remove Video From Playlist
+        Remove Video From Playlist
+        ==========================
         Function to remove a video from a playlist.
 
         Parameters
@@ -360,7 +368,8 @@ class VideoService:
     def add_video_to_playlist(self, video_: Video, playlist_: Playlist) -> dict:
 
         """
-        ## Add Video To Playlist
+        Add Video To Playlist
+        =====================
         Function to add a video to a playlist.
 
         Parameters
@@ -384,7 +393,8 @@ class VideoService:
     def update_likes(self, video_: Video, likes: int) -> dict:
 
         """
-        ## Update Likes
+        Update Likes
+        ============
         Function to update the likes of a video.
 
         Parameters
@@ -429,7 +439,8 @@ class VideoService:
     def update_views(self, video_: Video, views: int) -> dict:
 
         """
-        ## Update Views
+        Update Views
+        ============
         Function to update the views of a video.
 
         Parameters

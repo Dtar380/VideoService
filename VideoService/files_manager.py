@@ -24,7 +24,7 @@ class FileManager:
 
     """
     FileManager
-    -----------
+    ===========
     Manages video and thumbnail files on a server and database.
     """
 
@@ -36,7 +36,8 @@ class FileManager:
     ) -> None:
 
         """
-        ## Class Constructor
+        Class Constructor
+        =================
 
         Parameters
         ----------
@@ -60,7 +61,8 @@ class FileManager:
     def upload_file(self, **kwargs) -> Video | dict:
 
         """
-        ## Upload File
+        Upload File
+        ===========
         Uploads a video and thumbnail files to the server and database.
 
         Parameters
@@ -158,7 +160,8 @@ class FileManager:
     def delete_file(file_name: str, directory: str) -> None:
 
         """
-        ## Delete File
+        Delete File
+        ===========
         Deletes a file from the server and database.
 
         Parameters

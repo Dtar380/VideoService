@@ -8,7 +8,7 @@ class Video:
 
     """
     Video
-    -----
+    =====
     A class to represent a video.
     """
 
@@ -30,7 +30,8 @@ class Video:
     ) -> None:
 
         """
-        ## Class Constructor
+        Class Constructor
+        =================
 
         Parameters
         ----------
@@ -96,7 +97,8 @@ class Video:
     def video(self) -> dict:
 
         """
-        ## Video JSON
+        Video JSON
+        ==========
         Get a JSON object representing the video.
 
         Returns
@@ -130,7 +132,8 @@ class Video:
     def update_likes(self, likes: int) -> None:
 
         """
-        ## Update Likes
+        Update Likes
+        ============
         Update the likes of the video.
 
         Parameters
@@ -145,7 +148,8 @@ class Video:
     def update_views(self, views: int) -> None:
 
         """
-        ## Update Views
+        Update Views
+        ============
         Update the views of the video.
 
         Parameters
